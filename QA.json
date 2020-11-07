@@ -1,0 +1,45 @@
+[
+	{
+	"type": "radio",
+	"question": "Do you satisfy about our lecture panel ? ",
+	"answers": ["Excellent", "Great","Bad","Very Bad"],
+	"order": 1
+	},
+	{
+	"type": "radio",
+	"question": "What do you think about university environment ?",
+	"answers": ["Excellent", "Great","Bad","Very Bad"],
+	"order": 2
+	},
+	{
+	"type": "radio",
+	"question": "How helpful is your academic advisor ?",
+	"answers": ["Extremely helpful", "Very helpful","Moderately helpful","Slightly helpful","Not at all helpfull"],
+	"order": 3
+	},
+	{
+	"type": "radio",
+	"question": "Do you full fill you aim up to now ?",
+	"answers": ["Achieved", "Partially achieved","Not Yet"],
+	"order": 4
+	},
+	{
+	"type": "radio",
+	"question": "Do you suggest our university for other students ?",
+	"answers": ["Yes", "No"],
+	"order": 5
+	},
+	{
+	"type": "radio",
+	"question": "How useful are the services provided by the on-campus career center ?",
+	"answers": ["Extremely useful", "Very useful","Moderately useful","Slightly useful","Not at all useful"],
+	"order": 6
+	},
+	{
+	"type": "textArea",
+	"question": "What suggestions do you have for the improvement of the university?",
+	"answers": [],
+	"order": 7
+	}
+	
+]
