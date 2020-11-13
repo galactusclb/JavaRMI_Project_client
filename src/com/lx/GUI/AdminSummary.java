@@ -105,7 +105,7 @@ public class AdminSummary {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.setVisible(false);
-				new Admin();
+				new Admin(frame);
 			}
 		});
 	}

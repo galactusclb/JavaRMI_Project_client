@@ -2,12 +2,17 @@ package com.lx.GUI;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.List;
 import java.awt.*;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -15,17 +20,17 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import com.lx.Beans.dataModel;
+import com.lx.Beans.FeedBackBean;
+import com.lx.Interfaces.FeedBackI;
 
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
-
 
 public class Customer_feedback_pg {
 
@@ -33,8 +38,8 @@ public class Customer_feedback_pg {
 	public JPanel panel_answers;
 	public JTextArea textArea;
 	private JTextField textField;
-	public JButton btnSubmit;	
-	
+	public JButton btnSubmit;
+
 	public String[][] arrStr = new String[3][4];
 	JSONParser jsonp = new JSONParser();
 
@@ -42,31 +47,13 @@ public class Customer_feedback_pg {
 	int total = 0;
 	int questionIndex = 0;
 
-	dataModel[] model;
-
-//	ObjectMapper mapper = new ObjectMapper();
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Customer_feedback_pg window = new Customer_feedback_pg();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	FeedBackBean[] model;
 
 	/**
 	 * Create the application.
 	 */
-	public Customer_feedback_pg() {
+	public Customer_feedback_pg(JFrame frame) {
+		this.frame = frame;
 		initialize();
 
 //		for (int i = 0; i < arrStr.length; i++) {
@@ -82,24 +69,25 @@ public class Customer_feedback_pg {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(245, 245, 245));
-		frame.getContentPane().setLayout(null);
-		frame.setVisible(true);
-		frame.setTitle("GrandLuck University - FeedBack");
-		frame.setBounds(300, 100, 1200, 850);
-		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+//		frame = new JFrame();
+//		frame.getContentPane().setBackground(new Color(245, 245, 245));
+//		frame.getContentPane().setLayout(null);
+//		frame.setVisible(true);
+//		frame.setTitle("GrandLuck University - FeedBack");
+//		frame.setBounds(300, 100, 1200, 850);
+//		frame.setResizable(false);
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(0, 0, 1182, 100);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
-		
+
 		JLabel label_1 = new JLabel("");
 		label_1.setIcon(new ImageIcon(Customer_feedback_pg.class.getResource("/images/logo_2.png")));
-		label_1.setBackground(new Color(0,0,0,0));
+		label_1.setBackground(new Color(0, 0, 0, 0));
 		label_1.setBounds(53, 10, 180, 80);
 		panel.add(label_1);
 
@@ -110,7 +98,7 @@ public class Customer_feedback_pg {
 		panel_1.setLayout(null);
 
 //		Elments 
-		
+
 		JButton btnLogout = new JButton("Logout");
 		btnLogout.setBackground(new Color(224, 58, 0));
 		btnLogout.setForeground(Color.WHITE);
@@ -139,6 +127,8 @@ public class Customer_feedback_pg {
 		panel_1.add(panel_answers);
 
 		textArea = new JTextArea();
+		textArea.setLineWrap(true);
+		textArea.setWrapStyleWord(true);
 		textArea.setBounds(155, 212, 632, 197);
 		textArea.setBackground(Color.WHITE);
 		textArea.setVisible(false);
@@ -165,45 +155,74 @@ public class Customer_feedback_pg {
 		btnSubmit.setFocusable(false);
 		panel_1.add(btnSubmit);
 
-		
-		
 		ObjectMapper mapper = new ObjectMapper();
 
+		FeedBackI feed = null;
+		List<FeedBackBean> modal2 = null ;
+		
 		try {
-
-			model = mapper.readValue(new File("QA.json"), dataModel[].class);
-
+			feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
+			String response = feed.getAllFeedBack();
+			model = mapper.readValue(response, FeedBackBean[].class);
 			
-
 			DisplayAnswers();
+//			for(FeedBackBean fb:gg){
+//				System.out.println("  type : "+ fb.getType());
+//			}
+		} catch (MalformedURLException e1) {
+			e1.printStackTrace();
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
+		} catch (NotBoundException e1) {
+			e1.printStackTrace();
+		} catch( IOException e1) {
+			e1.printStackTrace();
+		}catch (Exception e1) {
+			e1.printStackTrace();
+		} 
+		
 
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//			model = mapper.readValue(new File("QA.json"), FeedBackBean[].class);
 
-		
-		
-		//CLICK EVENTS
-		
+		// CLICK EVENTS
+
 		btnSubmit.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (questionIndex < model.length - 1) {
 					questionIndex += 1;
-					
+
 					DisplayAnswers();
-					
-					if (questionIndex == model.length - 1 ) {
+
+					if (questionIndex == model.length - 1) {
 						btnSubmit.setText("Submit");
 					}
-				}
+				}else if(questionIndex == model.length -1) {
+					int num=0;
+					JSONArray objArray = new JSONArray();
+					String output =null;
 					
-				
+					try {
+						for (FeedBackBean fb : model) {
+							JSONObject subObj = new JSONObject();
+							subObj.put("_id",fb.get_id());
+							subObj.put("type", fb.getType());
+							subObj.put("question", fb.getQuestion());
+							subObj.put("selectedAnswer", fb.getSelectedAnswer());
+							
+							objArray.add(subObj);						
+						}	
+						output = objArray.toString();
+						
+						FeedBackI feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
+						feed.clientFeedBack("210451", output);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
 			}
 		});
 
@@ -213,16 +232,15 @@ public class Customer_feedback_pg {
 			public void actionPerformed(ActionEvent arg0) {
 				if (questionIndex > 0) {
 					questionIndex -= 1;
-					
+
 					DisplayAnswers();
 				}
 			}
 		});
-		
+
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				frame.setVisible(false);
-				new login_pg();
+				new login_pg(frame);
 			}
 		});
 
@@ -241,58 +259,135 @@ public class Customer_feedback_pg {
 		panel_1.add(label);
 
 	}
-	
-	
-	
-	
+
 	void DisplayAnswers() {
 		panel_answers.removeAll();
 		textArea.setVisible(false);
 		btnSubmit.setText("Next");
-		
+
 		textField.setText(model[questionIndex].getQuestion());
 
-		if (model[questionIndex].getType().equals("radio")) {
-			int num = model[questionIndex].getAnswers().length;
-			final JRadioButton rbtn[] = new JRadioButton[num];
+		if (model[questionIndex].getType().equals("radio")) {		
+			String answers = model[questionIndex].getAnswers();
+			String[] answersArray = answers.split(",");
+			
+			int j;
+			final JRadioButton rbtn[] = new JRadioButton[answersArray.length];
 
-			for (int j = 0; j < num; j++) {
-				 rbtn[j] = new JRadioButton(model[questionIndex].getAnswers()[j]);
-            		rbtn[j].setOpaque(false);
-            		rbtn[j].setContentAreaFilled(false);
+			for (j = 0; j < answersArray.length; j++) {
+//				rbtn[j] = new JRadioButton(model[questionIndex].getAnswers()[j]);
+				rbtn[j] = new JRadioButton(answersArray[j]);
+				rbtn[j].setOpaque(false);
+				rbtn[j].setContentAreaFilled(false);
 				rbtn[j].setBackground(new Color(0, 0, 0, 0));
 				rbtn[j].setFont(new Font("Calibri Light", Font.PLAIN, 24));
 				rbtn[j].setForeground(Color.WHITE);
 				rbtn[j].setActionCommand(Integer.toString(j));
-				rBtnClick(rbtn,num,j);
+				rBtnClick(rbtn, answersArray.length, j);
 				panel_answers.add(rbtn[j], BorderLayout.EAST);
 				
+				
+				//get select dynamic answer
+				int xd = j;
+				rbtn[j].addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+//						System.out.println(" q index : "+questionIndex+" selected answer : "+rbtn[xd].getText());
+						model[questionIndex].setSelectedAnswer(rbtn[xd].getText().toString());
+					}
+				});
 			}
+			
+			
 		} else if (model[questionIndex].getType().equals("textArea")) {
 			textArea.setVisible(true);
+			
+			textArea.addKeyListener(new KeyListener() {
+				
+				@Override
+				public void keyTyped(KeyEvent e) {
+					// TODO Auto-generated method stub
+					model[questionIndex].setSelectedAnswer(textArea.getText());
+				}
+				
+				@Override
+				public void keyReleased(KeyEvent e) {
+					
+				}
+				
+				@Override
+				public void keyPressed(KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 		}
 
 		panel_answers.validate();
 		panel_answers.repaint();
 	}
-	
-	//find and uncheck non selected radio button
+
+	// find and uncheck non selected radio button
 	void rBtnClick(JRadioButton btn[], int num, int selected) {
 		btn[selected].addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 //				System.out.println(btn.getText());
 //				System.out.println(btn.getActionCommand());
-				
+
 				for (int i = 0; i < num; i++) {
-					int k = Integer.parseInt(btn[selected].getActionCommand());
-					if ( k != i) {
+//					int k = Integer.parseInt(btn[selected].getActionCommand());
+					int k = selected;
+					if (k != i) {
 //						System.out.println("not selected "+ i);
 						btn[i].setSelected(false);
+					}else {
+						btn[i].setSelected(true);
 					}
 				}
 			}
 		});
 	}
+	
+	
+//	void rBtnClick(JRadioButton btn[], int num, int selected) {
+//		btn[selected].addItemListener(l);
+//		
+//		btn[selected].addActionListener(new ActionListener() {
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+////				System.out.println(btn.getText());
+////				System.out.println(btn.getActionCommand());
+//
+//				for (int i = 0; i < num; i++) {
+////					int k = Integer.parseInt(btn[selected].getActionCommand());
+//					int k = selected;
+//					
+//					
+//					if(model[questionIndex].getSelectedAnswer() != null && !model[questionIndex].getSelectedAnswer().trim().isEmpty()) {
+//						if (k != i) {
+////							System.out.println("not selected "+ i);
+//							btn[i].setSelected(false);
+//							System.out.println("lol 1");
+//						}else {
+//							btn[i].setSelected(true);
+//							System.out.println("xd 1");
+//						}
+//					}else {
+//						System.out.println("before : "+model[questionIndex].getSelectedAnswer());
+//						if (btn[i].getText().equalsIgnoreCase(model[questionIndex].getSelectedAnswer())) {
+//							btn[i].setSelected(true);
+//							System.out.println("xd");
+//						} else {
+//							System.out.println("lol");
+//							btn[i].setSelected(false);
+//						}
+//					}
+//				}
+//			}
+//		});		
+//	}
 }

@@ -37,29 +37,15 @@ public class login_pg {
 	private UserBean[] user;
 
 	private JFrame frame;
+	private JPanel panel;
 	private JTextField uname;
 	private JPasswordField pass;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					login_pg window = new login_pg();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	/**
 	 * Create the application.
 	 */
-	public login_pg() {
+	public login_pg(JFrame frame) {
+		this.frame = frame;
 		initialize();
 	}
 
@@ -67,16 +53,11 @@ public class login_pg {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-//		frame = new JFrame();
-//		frame.setBounds(100, 100, 450, 300);
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		frame = new JFrame();
-		frame.setVisible(true);
-		frame.getContentPane().setBackground(Color.WHITE);
-		frame.getContentPane().setLayout(null);
-		frame.setTitle("GrandLuck University - Login");
-		frame.setResizable(false);
+		panel = new JPanel();
+		panel.setVisible(true);
+		panel.setBounds(0, 0, 1194, 815);
+		panel.setLayout(null);
+		frame.getContentPane().add(panel);
 
 		uname = new JTextField();
 		uname.setForeground(new Color(102, 102, 102));
@@ -86,7 +67,7 @@ public class login_pg {
 		uname.setBorder(null);
 		uname.setBounds(761, 315, 256, 35);
 		uname.setColumns(10);
-		frame.getContentPane().add(uname);
+		panel.add(uname);
 
 		pass = new JPasswordField();
 		pass.setText("");
@@ -96,7 +77,7 @@ public class login_pg {
 		pass.setColumns(10);
 		pass.setBorder(null);
 		pass.setBounds(761, 390, 256, 35);
-		frame.getContentPane().add(pass);
+		panel.add(pass);
 
 		JButton btnLogin = new JButton("");
 		btnLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -104,23 +85,18 @@ public class login_pg {
 		btnLogin.setContentAreaFilled(false);
 		btnLogin.setBorderPainted(false);
 		btnLogin.setBounds(678, 478, 365, 65);
-		frame.getContentPane().add(btnLogin);
+		panel.add(btnLogin);
 
 		JLabel lblS = new JLabel("");
 		lblS.setBackground(Color.WHITE);
 		lblS.setIcon(new ImageIcon(login_pg.class.getResource("/images/login_bg_2.jpg")));
 		lblS.setBounds(0, 0, 1182, 803);
-		frame.getContentPane().add(lblS);
-
-		frame.setBounds(300, 100, 1200, 850);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		panel.add(lblS);
 		
 		mapper = new ObjectMapper();
 		
 		try {
 			user = mapper.readValue(new File("users.json"), UserBean[].class);
-
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -149,12 +125,13 @@ public class login_pg {
 					
 					if (role != null && !role.trim().isEmpty()) {
 						JOptionPane.showMessageDialog(frame, "Succesfully Logged");
-						frame.setVisible(false);
 						
 						if(role.equals("admin")) {
-							Admin admin = new Admin();						
+							panel.setVisible(false);
+							new Admin(frame);						
 						}else {
-							Customer_feedback_pg feed = new Customer_feedback_pg();													
+							panel.setVisible(false);
+							new Customer_feedback_pg(frame);			
 						}
 					}else {
 						JOptionPane.showMessageDialog(frame, "Invalid username or password");
@@ -172,4 +149,5 @@ public class login_pg {
 				}				
 			}
 		});
-}}
+}	
+}

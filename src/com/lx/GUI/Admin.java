@@ -23,24 +23,25 @@ public class Admin {
 
 	/**
 	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Admin window = new Admin();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	 */
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					Admin window = new Admin();
+//					window.frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the application.
 	 */
-	public Admin() {
+	public Admin(JFrame frame) {
+		this.frame=frame;
 		initialize();
 	}
 
@@ -48,14 +49,14 @@ public class Admin {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(245, 245, 245));
-		frame.getContentPane().setLayout(null);
-		frame.setVisible(true);
-		frame.setTitle("GrandLuck University - Admin");
-		frame.setResizable(false);
-		frame.setBounds(300, 100, 1200, 850);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame = new JFrame();
+//		frame.getContentPane().setBackground(new Color(245, 245, 245));
+//		frame.getContentPane().setLayout(null);
+//		frame.setVisible(true);
+//		frame.setTitle("GrandLuck University - Admin");
+//		frame.setResizable(false);
+//		frame.setBounds(300, 100, 1200, 850);
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
@@ -151,8 +152,9 @@ public class Admin {
 		
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				frame.setVisible(false);
-				new login_pg();
+				panel.setVisible(false);
+				panel_1.setVisible(false);
+				new login_pg(frame);
 			}
 		});
 		
