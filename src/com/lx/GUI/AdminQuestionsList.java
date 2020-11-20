@@ -19,12 +19,6 @@ public class AdminQuestionsList {
 
 	private JFrame frame;
 	private JTextField txtAddQuestions;
-	private JTextField txtType;
-	private JTextField txtQuestion;
-	private JTextField txtOrder;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
 
 	/**
 	 * Launch the application.
@@ -81,12 +75,12 @@ public class AdminQuestionsList {
 		panel_1.setLayout(null);
 		
 		txtAddQuestions = new JTextField();
-		txtAddQuestions.setText("Question List");
+		txtAddQuestions.setText("Questions");
 		txtAddQuestions.setBorder(null);
 		txtAddQuestions.setOpaque(false);
 		txtAddQuestions.setForeground(Color.WHITE);
 		txtAddQuestions.setFont(new Font("Calibri", Font.PLAIN, 28));
-		txtAddQuestions.setBounds(432, 50, 220, 37);
+		txtAddQuestions.setBounds(532, 49, 161, 37);
 		panel_1.add(txtAddQuestions);
 		txtAddQuestions.setColumns(10);
 		
@@ -99,7 +93,7 @@ public class AdminQuestionsList {
 //		btnAdd.setContentAreaFilled(false);
 		btnAdd.setBorder(null);
 		btnAdd.setFocusable(false);
-		btnAdd.setBounds(1022, 184, 112, 45);
+		btnAdd.setBounds(1022, 46, 112, 45);
 		panel_1.add(btnAdd);
 		
 		JButton btnBack = new JButton("Back");
@@ -113,94 +107,11 @@ public class AdminQuestionsList {
 		btnBack.setBounds(1022, 635, 112, 45);
 		panel_1.add(btnBack);
 		
-		txtType = new JTextField();
-		txtType.setFont(new Font("Calibri", Font.PLAIN, 18));
-		txtType.setForeground(Color.WHITE);
-		txtType.setOpaque(false);
-		txtType.setBorder(null);
-		txtType.setText("Type");
-		txtType.setBounds(706, 139, 116, 22);
-		panel_1.add(txtType);
-		txtType.setColumns(10);
-		
-		txtQuestion = new JTextField();
-		txtQuestion.setForeground(Color.WHITE);
-		txtQuestion.setFont(new Font("Calibri", Font.PLAIN, 18));
-		txtQuestion.setOpaque(false);
-		txtQuestion.setBorder(null);
-		txtQuestion.setText("Question");
-		txtQuestion.setBounds(457, 139, 116, 22);
-		panel_1.add(txtQuestion);
-		txtQuestion.setColumns(10);
-		
-		txtOrder = new JTextField();
-		txtOrder.setFont(new Font("Calibri", Font.PLAIN, 18));
-		txtOrder.setForeground(Color.WHITE);
-		txtOrder.setBorder(null);
-		txtOrder.setOpaque(false);
-		txtOrder.setText("Order");
-		txtOrder.setBounds(216, 139, 76, 22);
-		panel_1.add(txtOrder);
-		txtOrder.setColumns(10);
-		
-		Panel panel_2 = new Panel();
-		panel_2.setBackground(Color.WHITE);
-		panel_2.setBounds(195, 172, 614, 2);
-		panel_1.add(panel_2);
-		
-		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(351, 139, 1, 483);
-		panel_1.add(panel_3);
-		
-		JPanel panel_3_1 = new JPanel();
-		panel_3_1.setBounds(633, 139, 1, 483);
-		panel_1.add(panel_3_1);
-		
-		textField = new JTextField();
-		textField.setText("1");
-		textField.setOpaque(false);
-		textField.setForeground(Color.WHITE);
-		textField.setFont(new Font("Calibri", Font.PLAIN, 18));
-		textField.setColumns(10);
-		textField.setBorder(null);
-		textField.setBounds(216, 196, 76, 22);
-		panel_1.add(textField);
-		
-		textField_1 = new JTextField();
-		textField_1.setText("Do you satisfy about our lecture");
-		textField_1.setOpaque(false);
-		textField_1.setForeground(Color.WHITE);
-		textField_1.setFont(new Font("Calibri", Font.PLAIN, 18));
-		textField_1.setColumns(10);
-		textField_1.setBorder(null);
-		textField_1.setBounds(380, 196, 241, 22);
-		panel_1.add(textField_1);
-		
-		textField_2 = new JTextField();
-		textField_2.setText("radio");
-		textField_2.setOpaque(false);
-		textField_2.setForeground(Color.WHITE);
-		textField_2.setFont(new Font("Calibri", Font.PLAIN, 18));
-		textField_2.setColumns(10);
-		textField_2.setBorder(null);
-		textField_2.setBounds(695, 196, 76, 22);
-		panel_1.add(textField_2);
-		
 				
 		JLabel label = new JLabel("");
 //		label.setIcon(new ImageIcon(AdminQuestions.class.getResource("/images/qa.jpg")));
 		label.setBounds(0, 49, 1188, 573);
 		panel_1.add(label);
-		
-		JButton btnDelete = new JButton("Delete");
-		btnDelete.setForeground(Color.WHITE);
-		btnDelete.setFont(new Font("Calibri", Font.PLAIN, 18));
-		btnDelete.setBackground(new Color(230,55,12));
-		btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		btnDelete.setBorder(null);
-		btnDelete.setFocusable(false);
-		btnDelete.setBounds(821, 195, 97, 25);
-		panel_1.add(btnDelete);
 		
 		btnBack.addActionListener(new ActionListener() {
 			
@@ -216,8 +127,8 @@ public class AdminQuestionsList {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
-				new AdminQuestions();
+//				frame.setVisible(false);
+				new Admin(frame);
 			}
 		});
 	}

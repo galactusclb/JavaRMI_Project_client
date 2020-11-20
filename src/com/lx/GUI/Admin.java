@@ -59,6 +59,7 @@ public class Admin {
 //		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel panel = new JPanel();
+		panel.setVisible(true);
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(0, 0, 1200, 100);
 		frame.getContentPane().add(panel);
@@ -82,6 +83,7 @@ public class Admin {
 		panel.add(btnLogout);
 
 		JPanel panel_1 = new JPanel();
+		panel_1.setVisible(true);
 		panel_1.setBackground(new Color(1, 24, 55));
 		panel_1.setBounds(0, 99, 1200, 720);
 		frame.getContentPane().add(panel_1);
@@ -138,7 +140,7 @@ public class Admin {
 		btnCustomizeQuestions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frame.setVisible(false);
-				new AdminQuestionsList();
+				new AdminQuestionsList2();
 			}
 		});
 		
