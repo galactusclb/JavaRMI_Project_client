@@ -47,7 +47,7 @@ public class MainGUI {
 		frame.getContentPane().setBackground(Color.WHITE);
 		frame.getContentPane().setLayout(null);
 		
-		frame.setTitle("GrandLuck University - Login");
+		frame.setTitle("GrandLuck University ");
 		frame.setResizable(false);
 		frame.setBounds(300, 100, 1200, 850);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

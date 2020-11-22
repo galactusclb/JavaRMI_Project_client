@@ -139,8 +139,9 @@ public class Admin {
 		
 		btnCustomizeQuestions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				frame.setVisible(false);
-				new AdminQuestionsList2();
+				panel.setVisible(false);
+				panel_1.setVisible(false);
+				new AdminQuestionsList2(frame);
 			}
 		});
 		

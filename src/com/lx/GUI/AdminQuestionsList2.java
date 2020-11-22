@@ -12,6 +12,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,6 +20,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -34,29 +37,12 @@ import javax.swing.JTable;
 public class AdminQuestionsList2 {
 
 	private JFrame frame;
+	private JPanel panel,panel_1;
 	private JTextField txtAddQuestions;
 	private JTable table;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AdminQuestionsList2 window = new AdminQuestionsList2();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the application.
-	 */
-	public AdminQuestionsList2() {
+	public AdminQuestionsList2(JFrame frame) {
+		this.frame = frame;
 		initialize();
 	}
 
@@ -64,20 +50,18 @@ public class AdminQuestionsList2 {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		System.out.println("ad 2");
-		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(245, 245, 245));
-		frame.getContentPane().setLayout(null);
-		frame.setVisible(true);
-		frame.setTitle("GrandLuck University - Summary ");
-		frame.setResizable(false);
-		frame.setBounds(300, 100, 1200, 850);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		JPanel panel = new JPanel();
+		JPanel mainPanel = new JPanel();
+		mainPanel.setBounds(0, 0, 1200, 820);
+		mainPanel.setBackground(new Color(0,0,0,0));
+//		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		frame.getContentPane().add(mainPanel);
+		mainPanel.setLayout(null);
+		
+		panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(0, 0, 1200, 100);
-		frame.getContentPane().add(panel);
+		//frame.getContentPane().add(panel);
+		mainPanel.add(panel);
 		panel.setLayout(null);
 
 		JLabel label_1 = new JLabel("");
@@ -86,10 +70,10 @@ public class AdminQuestionsList2 {
 		label_1.setBounds(53, 10, 180, 80);
 		panel.add(label_1);
 
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		panel_1.setBackground(new Color(1, 24, 55));
 		panel_1.setBounds(0, 99, 1200, 720);
-		frame.getContentPane().add(panel_1);
+		mainPanel.add(panel_1);
 		panel_1.setLayout(null);
 
 		JButton btnAdd = new JButton("Add");
@@ -103,6 +87,10 @@ public class AdminQuestionsList2 {
 		btnAdd.setFocusable(false);
 		btnAdd.setBounds(1022, 46, 112, 45);
 		panel_1.add(btnAdd);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.setBounds(1053, 667, 97, 25);
+		panel_1.add(btnBack);
 
 		txtAddQuestions = new JTextField();
 		txtAddQuestions.setText("Questions");
@@ -114,15 +102,23 @@ public class AdminQuestionsList2 {
 		panel_1.add(txtAddQuestions);
 		txtAddQuestions.setColumns(10);
 
+		
 		btnAdd.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
+				mainPanel.setVisible(false);
+				new AdminQuestions(frame, 0);
+			}
+		});
+		
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				mainPanel.setVisible(false);
 				new Admin(frame);
 			}
 		});
-
+		
 //		table = new JTable();
 
 		FeedBackI feed = null;
@@ -168,7 +164,7 @@ public class AdminQuestionsList2 {
 //				{1,"radio","Do you satisfy about our lecture panel ?","Excellent, Great,Bad,Very Bad",0}
 //		};
 
-		Object[][] data = new Object[model.length][5];
+		Object[][] data = new Object[model.length][6];
 
 		int k = 0;
 		for (FeedBackBean fb : model) {
@@ -176,9 +172,9 @@ public class AdminQuestionsList2 {
 				if (j == 0) {
 					data[k][j] = fb.get_id();
 				} else if (j == 1) {
-					data[k][j] = fb.getType();
-				} else if (j == 2) {
 					data[k][j] = fb.getOrder();
+				} else if (j == 2) {
+					data[k][j] = fb.getType();
 				} else if (j == 3) {
 					data[k][j] = fb.getQuestion();
 				} else if (j == 4) {
@@ -188,6 +184,8 @@ public class AdminQuestionsList2 {
 			}
 			++k;
 		}
+		
+		
 //		for (int i = 0; i < model.length; i++)
 //		{
 //		    for (int j =  0; j < 5; j++)
@@ -215,23 +213,49 @@ public class AdminQuestionsList2 {
 			if (i == 0)
 				column.setMaxWidth(50);
 			if (i == 1)
-				column.setMaxWidth(70);
+				column.setMaxWidth(50);
 //		    if (i == 2)
-//		        column.setMaxWidth(468);
+//		        column.setMaxWidth(100);
 //		    if (i == 3)
 //		        column.setMaxWidth(468);
 			if (i == 2)
-				column.setMaxWidth(50);
+				column.setMaxWidth(100);
 		}
 
 //		jt.getColumnModel().getColumn(0).setWidth(1);
 //		jt.setBounds(80,139,964,300); 
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 139, 1106, 193);
+		scrollPane.setBounds(12, 139, 1106, 400);
 		scrollPane.setViewportView(jt);
 //		scrollPane.add(jt);
 
 		panel_1.add(scrollPane);
+		
+		
+		
+		//get clicked row
+		jt.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		    @Override
+		    public void valueChanged(ListSelectionEvent event) {
+		    	
+		    	if(!event.getValueIsAdjusting()){
+		    	    int selectedData = 0;
+
+		    	    int selectedRow = jt.getSelectedRow();
+//		    	    int selectedColumns = jt.getSelectedColumn();
+
+		    	    for (int i = 0; i <= selectedRow; i++) {
+		    	        for (int j = 0; j < 1; j++) {
+		    	            selectedData = (int) jt.getValueAt(selectedRow, 0);
+		    	        }
+		    	    }
+//		    	    System.out.println("Selected: " + Integer.toString(selectedData));
+		    	    mainPanel.setVisible(false);
+		            new AdminQuestions(frame, selectedData);
+		    	}
+		    }
+		});
 	}
+
 }

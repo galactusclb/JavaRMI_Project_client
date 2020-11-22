@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Optional;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -21,6 +22,7 @@ import javax.swing.JTextField;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.lx.Beans.FeedBackBean;
 import com.lx.Beans.ResponsJsonBean;
 import com.lx.Interfaces.FeedBackI;
 
@@ -35,50 +37,60 @@ public class AdminQuestions {
 	private JTextField txtAddQuestions;
 	private ButtonGroup radion_qType_group;
 	private JButton btnSave, btnCancel;
+	private JRadioButton rdbtn_checkBox,rdbtn_txtArea,rdbtn_radio;
 
 	private FeedBackI feed;
 	private JTextField txtOrder;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AdminQuestions window = new AdminQuestions();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the application.
-	 */
-	public AdminQuestions() {
+	private int editQuestionId;
+	
+	public AdminQuestions(JFrame frame, int qId) {
+		this.frame = frame;
 		initialize();
+		
+		if (Optional.ofNullable(qId).orElse(0) != 0 ) {
+//			System.out.println(qId);
+			this.editQuestionId = qId;
+			
+			try {
+				feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
+				
+				String response = feed.getFeedBackByQid(editQuestionId);
+				ObjectMapper mapper = new ObjectMapper();
+				FeedBackBean[] model = mapper.readValue(response, FeedBackBean[].class);
+				
+				txtQuestion.setText(model[0].getQuestion());
+				txtAnswers.setText(model[0].getAnswers());
+				txtOrder.setText(Integer.toString(model[0].getOrder()));
+				
+				if (model[0].getType().equalsIgnoreCase("checkBox")) {
+					rdbtn_checkBox.setSelected(true);
+				} else if (model[0].getType().equalsIgnoreCase("textArea")){
+					rdbtn_txtArea.setSelected(true);
+				}else {
+					rdbtn_radio.setSelected(true);
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(245, 245, 245));
-		frame.getContentPane().setLayout(null);
-		frame.setVisible(true);
-		frame.setTitle("GrandLuck University - Questions");
-		frame.setResizable(false);
-		frame.setBounds(300, 100, 1200, 850);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		JPanel mainPanel = new JPanel();
+		mainPanel.setBounds(0, 0, 1200, 820);
+		mainPanel.setBackground(new Color(0,0,0,0));
+		frame.getContentPane().add(mainPanel);
+		mainPanel.setLayout(null);
+		
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(0, 0, 1200, 100);
-		frame.getContentPane().add(panel);
+		mainPanel.add(panel);
 		panel.setLayout(null);
 
 		JLabel label_1 = new JLabel("");
@@ -90,7 +102,7 @@ public class AdminQuestions {
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(1, 24, 55));
 		panel_1.setBounds(0, 99, 1200, 720);
-		frame.getContentPane().add(panel_1);
+		mainPanel.add(panel_1);
 		panel_1.setLayout(null);
 
 		txtQuestion = new JTextArea();
@@ -112,7 +124,7 @@ public class AdminQuestions {
 		txtAnswers.setColumns(10);
 		panel_1.add(txtAnswers);
 		
-		JRadioButton rdbtn_radio = new JRadioButton("Radio");
+		rdbtn_radio = new JRadioButton("Radio");
 		rdbtn_radio.setActionCommand("radio");
 		rdbtn_radio.setOpaque(false);
 		rdbtn_radio.setFont(new Font("Cambria", Font.PLAIN, 18));
@@ -123,8 +135,8 @@ public class AdminQuestions {
 		rdbtn_radio.setBounds(306, 229, 83, 25);
 		panel_1.add(rdbtn_radio);
 
-		JRadioButton rdbtn_txtArea = new JRadioButton("Text Area");
-		rdbtn_txtArea.setActionCommand("textarea");
+		rdbtn_txtArea = new JRadioButton("Text Area");
+		rdbtn_txtArea.setActionCommand("textArea");
 		rdbtn_txtArea.setOpaque(false);
 		rdbtn_txtArea.setFont(new Font("Cambria", Font.PLAIN, 18));
 		rdbtn_txtArea.setForeground(Color.WHITE);
@@ -134,8 +146,8 @@ public class AdminQuestions {
 		rdbtn_txtArea.setBounds(415, 229, 99, 25);
 		panel_1.add(rdbtn_txtArea);
 
-		JRadioButton rdbtn_checkBox = new JRadioButton("Check Box");
-		rdbtn_checkBox.setActionCommand("checkbox");
+		rdbtn_checkBox = new JRadioButton("Check Box");
+		rdbtn_checkBox.setActionCommand("checkBox");
 		rdbtn_checkBox.setOpaque(false);
 		rdbtn_checkBox.setFont(new Font("Cambria", Font.PLAIN, 18));
 		rdbtn_checkBox.setForeground(Color.WHITE);
@@ -225,8 +237,8 @@ public class AdminQuestions {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);
-				new AdminQuestionsList();
+				mainPanel.setVisible(false);
+				new AdminQuestionsList2(frame);
 			}
 		});
 
@@ -250,7 +262,13 @@ public class AdminQuestions {
 					}
 					
 					feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
-					String res = feed.addFeedBack(type, question, answers, order);
+					
+					String res=null;
+					if (editQuestionId > 0) { //edit question
+						res = feed.editFeedBack(editQuestionId,type, question, answers, order);
+					} else {
+						res = feed.addFeedBack(type, question, answers, order);
+					}
 //					System.out.println(res);
 					
 					ObjectMapper mapper = new ObjectMapper();
@@ -258,8 +276,10 @@ public class AdminQuestions {
 					
 					System.out.println(model.getMessage());
 					
-					if(model.getStatus() == 400) {
+					if(model.getStatus() == 200) {
 						JOptionPane.showMessageDialog(frame, model.getMessage(),"Successful", JOptionPane.QUESTION_MESSAGE,new ImageIcon("images/logo.png"));
+						mainPanel.setVisible(false);
+						new AdminQuestionsList2(frame);
 					}else {
 						JOptionPane.showMessageDialog(frame, model.getMessage());
 					}

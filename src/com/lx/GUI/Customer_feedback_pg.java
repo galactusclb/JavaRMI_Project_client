@@ -262,7 +262,8 @@ public class Customer_feedback_pg {
 
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				panel.setVisible(false);
+				panel_1.setVisible(false);
 				new login_pg(frame);
 			}
 		});
@@ -295,7 +296,7 @@ public class Customer_feedback_pg {
 		questionCount.setText((questionIndex+1)+"/"+count);
 		
 
-		if (model[questionIndex].getType().equals("radio")) {		
+		if (model[questionIndex].getType().equalsIgnoreCase("radio")) {		
 			String answers = model[questionIndex].getAnswers();
 			String[] answersArray = answers.split(",");
 			
@@ -328,7 +329,7 @@ public class Customer_feedback_pg {
 			}
 			
 			
-		} else if (model[questionIndex].getType().equals("textArea")) {
+		} else if (model[questionIndex].getType().equalsIgnoreCase("textArea")) {
 			JTextArea textArea = new JTextArea();
 			textArea.setLineWrap(true);
 			textArea.setWrapStyleWord(true);
