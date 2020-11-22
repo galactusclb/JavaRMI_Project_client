@@ -53,6 +53,6 @@ public class MainGUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 //		frame.setVisible(false);
-		new login_pg(frame);
+		new AdminQuestionsList2(frame);
 	}
 }

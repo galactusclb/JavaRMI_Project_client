@@ -36,44 +36,44 @@ public class AdminQuestions {
 	private JTextArea txtQuestion, txtAnswers;
 	private JTextField txtAddQuestions;
 	private ButtonGroup radion_qType_group;
-	private JButton btnSave, btnCancel;
-	private JRadioButton rdbtn_checkBox,rdbtn_txtArea,rdbtn_radio;
+	private JButton btnSave, btnCancel, btnDelete;
+	private JRadioButton rdbtn_checkBox, rdbtn_txtArea, rdbtn_radio;
 
 	private FeedBackI feed;
 	private JTextField txtOrder;
 	private int editQuestionId;
-	
+
 	public AdminQuestions(JFrame frame, int qId) {
 		this.frame = frame;
 		initialize();
-		
-		if (Optional.ofNullable(qId).orElse(0) != 0 ) {
+
+		if (Optional.ofNullable(qId).orElse(0) != 0) {
 //			System.out.println(qId);
 			this.editQuestionId = qId;
-			
+
 			try {
 				feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
-				
+
 				String response = feed.getFeedBackByQid(editQuestionId);
 				ObjectMapper mapper = new ObjectMapper();
 				FeedBackBean[] model = mapper.readValue(response, FeedBackBean[].class);
-				
+
 				txtQuestion.setText(model[0].getQuestion());
 				txtAnswers.setText(model[0].getAnswers());
 				txtOrder.setText(Integer.toString(model[0].getOrder()));
-				
+
 				if (model[0].getType().equalsIgnoreCase("checkBox")) {
 					rdbtn_checkBox.setSelected(true);
-				} else if (model[0].getType().equalsIgnoreCase("textArea")){
+				} else if (model[0].getType().equalsIgnoreCase("textArea")) {
 					rdbtn_txtArea.setSelected(true);
-				}else {
+				} else {
 					rdbtn_radio.setSelected(true);
 				}
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
 
@@ -83,10 +83,10 @@ public class AdminQuestions {
 	private void initialize() {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBounds(0, 0, 1200, 820);
-		mainPanel.setBackground(new Color(0,0,0,0));
+		mainPanel.setBackground(new Color(0, 0, 0, 0));
 		frame.getContentPane().add(mainPanel);
 		mainPanel.setLayout(null);
-		
+
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(0, 0, 1200, 100);
@@ -123,7 +123,7 @@ public class AdminQuestions {
 		txtAnswers.setBounds(304, 311, 396, 143);
 		txtAnswers.setColumns(10);
 		panel_1.add(txtAnswers);
-		
+
 		rdbtn_radio = new JRadioButton("Radio");
 		rdbtn_radio.setActionCommand("radio");
 		rdbtn_radio.setOpaque(false);
@@ -155,12 +155,12 @@ public class AdminQuestions {
 		rdbtn_checkBox.setBorder(null);
 		rdbtn_checkBox.setBounds(544, 229, 119, 25);
 		panel_1.add(rdbtn_checkBox);
-		
-		radion_qType_group= new ButtonGroup();
+
+		radion_qType_group = new ButtonGroup();
 		radion_qType_group.add(rdbtn_radio);
 		radion_qType_group.add(rdbtn_txtArea);
 		radion_qType_group.add(rdbtn_checkBox);
-		
+
 		txtAddQuestions = new JTextField();
 		txtAddQuestions.setBorder(null);
 		txtAddQuestions.setOpaque(false);
@@ -170,7 +170,7 @@ public class AdminQuestions {
 		txtAddQuestions.setBounds(429, 41, 154, 37);
 		panel_1.add(txtAddQuestions);
 		txtAddQuestions.setColumns(10);
-		
+
 		txtOrder = new JTextField();
 		txtOrder.setBounds(301, 267, 119, 22);
 		panel_1.add(txtOrder);
@@ -196,14 +196,22 @@ public class AdminQuestions {
 		btnSave.setBounds(292, 532, 119, 43);
 		panel_1.add(btnSave);
 
+		btnDelete = new JButton("");
+		btnDelete.setBackground(new Color(0, 0, 0, 0));
+		btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnDelete.setOpaque(false);
+		btnDelete.setContentAreaFilled(false);
+		btnDelete.setBorderPainted(false);
+		btnDelete.setFocusable(false);
+		btnDelete.setIcon(new ImageIcon(AdminQuestions.class.getResource("/images/delete.png")));
+		btnDelete.setBounds(574, 532, 53, 43);
+		panel_1.add(btnDelete);
+
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(AdminQuestions.class.getResource("/images/qa.jpg")));
 		label.setBounds(0, 49, 1188, 573);
 		panel_1.add(label);
 
-		
-		
-		
 //		rdbtn_radio.addActionListener(new ActionListener() {
 //
 //			@Override
@@ -231,14 +239,46 @@ public class AdminQuestions {
 //				rdbtn_checkBox.setSelected(true);
 //			}
 //		});
-		
-		
+
 		btnCancel.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainPanel.setVisible(false);
 				new AdminQuestionsList2(frame);
+			}
+		});
+
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				int response = JOptionPane.showConfirmDialog(null, "Do you want to continue?", "Confirm",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				
+				
+				if (response == JOptionPane.YES_OPTION) {
+					try {
+						feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
+						
+						Boolean res = feed.deleteFeedBackByQid(editQuestionId);
+						
+						if (res) {
+							JOptionPane.showMessageDialog(frame, "Feedback delete succesfully.");
+							mainPanel.setVisible(false);
+							new AdminQuestionsList2(frame);
+						} else {
+							JOptionPane.showMessageDialog(frame, "Failed to delete the feedback question.");
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} 
+				
+//				else if (response == JOptionPane.CLOSED_OPTION) {
+//					System.out.println("JOptionPane closed");
+//				} else if (response == JOptionPane.NO_OPTION) {
+//					System.out.println("No button clicked");
+				
 			}
 		});
 
@@ -255,35 +295,36 @@ public class AdminQuestions {
 
 					if (rdbtn_checkBox.isSelected()) {
 						type = rdbtn_checkBox.getActionCommand();
-					} else if(rdbtn_txtArea.isSelected()){
+					} else if (rdbtn_txtArea.isSelected()) {
 						type = rdbtn_txtArea.getActionCommand();
-					}else {
+					} else {
 						type = rdbtn_radio.getActionCommand();
 					}
-					
+
 					feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
-					
-					String res=null;
-					if (editQuestionId > 0) { //edit question
-						res = feed.editFeedBack(editQuestionId,type, question, answers, order);
+
+					String res = null;
+					if (editQuestionId > 0) { // edit question
+						res = feed.editFeedBack(editQuestionId, type, question, answers, order);
 					} else {
 						res = feed.addFeedBack(type, question, answers, order);
 					}
 //					System.out.println(res);
-					
+
 					ObjectMapper mapper = new ObjectMapper();
 					ResponsJsonBean model = mapper.readValue(res, ResponsJsonBean.class);
-					
+
 					System.out.println(model.getMessage());
-					
-					if(model.getStatus() == 200) {
-						JOptionPane.showMessageDialog(frame, model.getMessage(),"Successful", JOptionPane.QUESTION_MESSAGE,new ImageIcon("images/logo.png"));
+
+					if (model.getStatus() == 200) {
+						JOptionPane.showMessageDialog(frame, model.getMessage(), "Successful",
+								JOptionPane.QUESTION_MESSAGE, new ImageIcon("images/logo.png"));
 						mainPanel.setVisible(false);
 						new AdminQuestionsList2(frame);
-					}else {
+					} else {
 						JOptionPane.showMessageDialog(frame, model.getMessage());
 					}
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
