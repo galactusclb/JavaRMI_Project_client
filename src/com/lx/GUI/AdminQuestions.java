@@ -74,6 +74,9 @@ public class AdminQuestions {
 				e.printStackTrace();
 			}
 
+		} else {
+			btnDelete.setVisible(false);
+
 		}
 	}
 
@@ -254,14 +257,13 @@ public class AdminQuestions {
 
 				int response = JOptionPane.showConfirmDialog(null, "Do you want to continue?", "Confirm",
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-				
-				
+
 				if (response == JOptionPane.YES_OPTION) {
 					try {
 						feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
-						
+
 						Boolean res = feed.deleteFeedBackByQid(editQuestionId);
-						
+
 						if (res) {
 							JOptionPane.showMessageDialog(frame, "Feedback delete succesfully.");
 							mainPanel.setVisible(false);
@@ -272,13 +274,13 @@ public class AdminQuestions {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				} 
-				
+				}
+
 //				else if (response == JOptionPane.CLOSED_OPTION) {
 //					System.out.println("JOptionPane closed");
 //				} else if (response == JOptionPane.NO_OPTION) {
 //					System.out.println("No button clicked");
-				
+
 			}
 		});
 

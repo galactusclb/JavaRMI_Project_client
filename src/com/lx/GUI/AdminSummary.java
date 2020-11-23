@@ -15,6 +15,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.general.DefaultPieDataset;
+
 public class AdminSummary {
 
 	private JFrame frame;
@@ -94,11 +101,35 @@ public class AdminSummary {
 		btnBack.setBounds(1022, 635, 112, 45);
 		panel_1.add(btnBack);
 		
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.setBounds(197, 495, 97, 25);
+		panel_1.add(btnNewButton);
+		
 				
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(AdminSummary.class.getResource("/images/summary_chart.JPG")));
 		label.setBounds(205, 102, 775, 380);
 		panel_1.add(label);
+		
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				DefaultPieDataset pieDataSet = new DefaultPieDataset();
+				
+				pieDataSet.setValue("one", new Integer(20));
+				pieDataSet.setValue("Two", new Integer(30));
+				pieDataSet.setValue("Three", new Integer(50));
+				
+				JFreeChart chart = ChartFactory.createPieChart3D("Pie chart", pieDataSet, true,true,true);
+				PiePlot3D p = (PiePlot3D) chart.getPlot();
+//				p.setForegroundAlpha(TOP_ALIGNMENT);
+				ChartFrame frame=new ChartFrame("Pie Chart", chart);
+				
+				frame.setVisible(true);
+				frame.setSize(450,500);
+				
+				
+			}
+		});
 		
 		btnBack.addActionListener(new ActionListener() {
 			
@@ -108,5 +139,7 @@ public class AdminSummary {
 				new Admin(frame);
 			}
 		});
+		
+		
 	}
 }

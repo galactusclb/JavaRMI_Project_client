@@ -152,6 +152,14 @@ public class Admin {
 			}
 		});
 		
+		btnUsers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				panel.setVisible(false);
+				panel_1.setVisible(false);
+				new AdminSummaryQuestionList(frame);
+			}
+		});
+		
 		
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
