@@ -27,6 +27,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.lx.Beans.FeedBackBean;
+import com.lx.Beans.UserBean;
 import com.lx.Interfaces.FeedBackI;
 
 import javax.swing.JPanel;
@@ -36,10 +37,11 @@ import javax.swing.JTextArea;
 public class Customer_feedback_pg {
 
 	private JFrame frame;
-	public JPanel panel_answers;
+	public JPanel mainPanel,panel,panel_1,panel_answers;
 	private JTextField textField;
 	public JButton btnSubmit;
 
+	private UserBean currentUser;
 	public String[][] arrStr = new String[3][4];
 	JSONParser jsonp = new JSONParser();
 
@@ -53,8 +55,9 @@ public class Customer_feedback_pg {
 	/**
 	 * Create the application.
 	 */
-	public Customer_feedback_pg(JFrame frame) {
-		this.frame = frame;
+	public Customer_feedback_pg(JFrame frame,UserBean currentUser) {
+		this.frame=frame;
+		this.currentUser = currentUser;
 		initialize();
 
 //		for (int i = 0; i < arrStr.length; i++) {
@@ -70,21 +73,18 @@ public class Customer_feedback_pg {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-
-//		frame = new JFrame();
-//		frame.getContentPane().setBackground(new Color(245, 245, 245));
-//		frame.getContentPane().setLayout(null);
-//		frame.setVisible(true);
-//		frame.setTitle("GrandLuck University - FeedBack");
-//		frame.setBounds(300, 100, 1200, 850);
-//		frame.setResizable(false);
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		JPanel panel = new JPanel();
 		
+		mainPanel = new JPanel();
+		mainPanel.setBounds(0, 0, 1200, 820);
+		mainPanel.setBackground(new Color(0,0,0,0));
+//		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		frame.getContentPane().add(mainPanel);
+		mainPanel.setLayout(null);
+		
+		panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(0, 0, 1182, 100);
-		frame.getContentPane().add(panel);
+		mainPanel.add(panel);
 		panel.setLayout(null);
 
 		JLabel label_1 = new JLabel("");
@@ -93,10 +93,10 @@ public class Customer_feedback_pg {
 		label_1.setBounds(53, 10, 180, 80);
 		panel.add(label_1);
 
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		panel_1.setBackground(new Color(1, 24, 55));
 		panel_1.setBounds(0, 99, 1194, 716);
-		frame.getContentPane().add(panel_1);
+		mainPanel.add(panel_1);
 		panel_1.setLayout(null);
 
 //		Elments 
@@ -110,6 +110,10 @@ public class Customer_feedback_pg {
 		btnLogout.setFocusable(false);
 		btnLogout.setBounds(1019, 36, 97, 25);
 		panel.add(btnLogout);
+		
+		JButton btnDashboard = new JButton("Dashboard");
+		btnDashboard.setBounds(897, 36, 97, 25);
+		panel.add(btnDashboard);
 
 		textField = new JTextField();
 		textField.setForeground(Color.WHITE);
@@ -230,13 +234,16 @@ public class Customer_feedback_pg {
 						if (!next) {
 							JOptionPane.showMessageDialog(frame, "Please, answer for every questions before submit");
 						} else {
-							feed.clientFeedBack("210451", output);
+							feed.clientFeedBack(currentUser.getUname(), output);
 							JOptionPane.showMessageDialog(frame, "Feedback submit successfully");
 							
 							//clear data
 							for (FeedBackBean fb : model) {
 								fb.setSelectedAnswer(null);
 							}	
+							
+							mainPanel.setVisible(false);
+							new C_Dashboard(frame,null);
 						}
 						
 					} catch (Exception e) {
@@ -262,12 +269,18 @@ public class Customer_feedback_pg {
 
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				panel.setVisible(false);
-				panel_1.setVisible(false);
+				mainPanel.setVisible(false);
 				new login_pg(frame);
 			}
 		});
-
+		
+		btnDashboard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				mainPanel.setVisible(false);
+				new C_Dashboard(frame, null);
+			}
+		});
+		
 		JRadioButton rdbtnLecturepanel = new JRadioButton("dd");
 		rdbtnLecturepanel.setFont(new Font("Calibri Light", Font.PLAIN, 24));
 		rdbtnLecturepanel.setForeground(Color.WHITE);

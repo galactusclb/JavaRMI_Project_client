@@ -6,11 +6,16 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -29,15 +34,24 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.lx.Beans.FeedBackBean;
 import com.lx.Interfaces.FeedBackI;
 
 import javax.swing.JTable;
+import javax.swing.JCheckBox;
 
 public class AdminQuestionsList2 {
 
 	private JFrame frame;
-	private JPanel panel,panel_1;
+	private JPanel mainPanel,panel, panel_1;
 	private JTextField txtAddQuestions;
 	private JTable table;
 
@@ -50,17 +64,17 @@ public class AdminQuestionsList2 {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		JPanel mainPanel = new JPanel();
+		mainPanel = new JPanel();
 		mainPanel.setBounds(0, 0, 1200, 820);
-		mainPanel.setBackground(new Color(0,0,0,0));
+		mainPanel.setBackground(new Color(0, 0, 0, 0));
 //		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		frame.getContentPane().add(mainPanel);
 		mainPanel.setLayout(null);
-		
+
 		panel = new JPanel();
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(0, 0, 1200, 100);
-		//frame.getContentPane().add(panel);
+		// frame.getContentPane().add(panel);
 		mainPanel.add(panel);
 		panel.setLayout(null);
 
@@ -87,7 +101,7 @@ public class AdminQuestionsList2 {
 		btnAdd.setFocusable(false);
 		btnAdd.setBounds(1022, 46, 112, 45);
 		panel_1.add(btnAdd);
-		
+
 		JButton btnBack = new JButton("Back");
 		btnBack.setBounds(1053, 667, 97, 25);
 		panel_1.add(btnBack);
@@ -101,8 +115,25 @@ public class AdminQuestionsList2 {
 		txtAddQuestions.setBounds(532, 49, 161, 37);
 		panel_1.add(txtAddQuestions);
 		txtAddQuestions.setColumns(10);
-
 		
+		JCheckBox checkboxStatus = new JCheckBox("Status ");
+		checkboxStatus.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		checkboxStatus.setForeground(Color.WHITE);
+		checkboxStatus.setBorder(null);
+		checkboxStatus.setOpaque(false);
+		checkboxStatus.setBounds(69, 87, 76, 25);
+		panel_1.add(checkboxStatus);
+
+		JButton btnReport = new JButton("Report");
+		btnReport.setBounds(883, 57, 97, 25);
+		panel_1.add(btnReport);
+		
+		JButton btnReload = new JButton("Reload");
+		btnReload.setBounds(172, 88, 97, 25);
+		panel_1.add(btnReload);
+		
+		displayTable(false);
+
 		btnAdd.addActionListener(new ActionListener() {
 
 			@Override
@@ -111,23 +142,108 @@ public class AdminQuestionsList2 {
 				new AdminQuestions(frame, 0);
 			}
 		});
-		
+
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				mainPanel.setVisible(false);
-				new Admin(frame);
+				new Admin(frame, null);
+			}
+		});
+
+//		table = new JTable();
+
+		
+		
+
+		btnReload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (checkboxStatus.isSelected()) {
+					displayTable(true);
+				}else {
+					displayTable(false);
+				}
 			}
 		});
 		
-//		table = new JTable();
+		btnReport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String currentPath = System.getProperty("user.dir");
+				String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 
-		FeedBackI feed = null;
+				// make folder
+				File theDir = new File(currentPath + "\\outputs");
+				if (!theDir.exists()) {
+					theDir.mkdirs();
+				}
+
+				String fileName = currentPath + "\\outputs\\GL_Feedback_QA_" + timeStamp + ".pdf";
+				Document document = new Document();
+
+				try {
+					PdfWriter.getInstance(document, new FileOutputStream(fileName));
+					document.open();
+
+//					Paragraph para = new Paragraph("Test GL_Feedback_QA_"+timeStamp+".pdf");
+//					document.add(para);
+					
+					Paragraph para = new Paragraph("Questionnaire List");
+					para.setSpacingAfter(35);
+					para.setAlignment(Element.ALIGN_CENTER);
+					document.add(para);
+					
+					para = new Paragraph(" ");
+					document.add(para);
+					
+					PdfPTable ptable = new PdfPTable(4);
+
+					// add table header
+					PdfPCell c1 = new PdfPCell(new Phrase("Question"));
+					ptable.addCell(c1);
+					c1 = new PdfPCell(new Phrase("Answers"));
+					ptable.addCell(c1);
+					c1 = new PdfPCell(new Phrase("Type"));
+					ptable.addCell(c1);
+					ptable.setHeaderRows(1);
+
+					FeedBackI feed = null;
+					FeedBackBean[] model = null;
+					ObjectMapper mapper = new ObjectMapper();
+
+					feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
+					String response = feed.getAllFeedBack(false);
+					model = mapper.readValue(response, FeedBackBean[].class);
+
+					for (FeedBackBean fb : model) {
+//						for (int j = 0; j < 5; j++) {
+							ptable.addCell(fb.getQuestion());
+							ptable.addCell(fb.getAnswers());
+							ptable.addCell(fb.getType());
+//						}
+					}
+					document.add(ptable);
+					
+					document.close();
+
+					System.out.println(
+							"pdf create is finished. " + currentPath + "\\GL_Feedback_QA_" + timeStamp + ".pdf");
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+
+//				System.out.println("Working Directory = " + fileName);
+			}
+		});
+	}
+	
+	
+    public void displayTable(boolean checked){
+    	FeedBackI feed = null;
 		FeedBackBean[] model = null;
 		ObjectMapper mapper = new ObjectMapper();
 
 		try {
 			feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
-			String response = feed.getAllFeedBack(false);
+			String response = feed.getAllFeedBack(checked);
 			model = mapper.readValue(response, FeedBackBean[].class);
 
 //			JSONArray objArray = new JSONArray();
@@ -148,14 +264,6 @@ public class AdminQuestionsList2 {
 //			for(FeedBackBean fb:gg){
 //				System.out.println("  type : "+ fb.getType());
 //			}
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		} catch (RemoteException e1) {
-			e1.printStackTrace();
-		} catch (NotBoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -184,8 +292,7 @@ public class AdminQuestionsList2 {
 			}
 			++k;
 		}
-		
-		
+
 //		for (int i = 0; i < model.length; i++)
 //		{
 //		    for (int j =  0; j < 5; j++)
@@ -233,29 +340,30 @@ public class AdminQuestionsList2 {
 		panel_1.add(scrollPane);
 		
 		
-		
-		//get clicked row
-		jt.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-		    @Override
-		    public void valueChanged(ListSelectionEvent event) {
-		    	
-		    	if(!event.getValueIsAdjusting()){
-		    	    int selectedData = 0;
 
-		    	    int selectedRow = jt.getSelectedRow();
+		// get clicked row
+		jt.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent event) {
+
+				if (!event.getValueIsAdjusting()) {
+					int selectedData = 0;
+
+					int selectedRow = jt.getSelectedRow();
 //		    	    int selectedColumns = jt.getSelectedColumn();
 
-		    	    for (int i = 0; i <= selectedRow; i++) {
-		    	        for (int j = 0; j < 1; j++) {
-		    	            selectedData = (int) jt.getValueAt(selectedRow, 0);
-		    	        }
-		    	    }
+					for (int i = 0; i <= selectedRow; i++) {
+						for (int j = 0; j < 1; j++) {
+							selectedData = (int) jt.getValueAt(selectedRow, 0);
+						}
+					}
 //		    	    System.out.println("Selected: " + Integer.toString(selectedData));
-		    	    mainPanel.setVisible(false);
-		            new AdminQuestions(frame, selectedData);
-		    	}
-		    }
+					mainPanel.setVisible(false);
+					new AdminQuestions(frame, selectedData);
+				}
+			}
 		});
 	}
-
 }
+
+

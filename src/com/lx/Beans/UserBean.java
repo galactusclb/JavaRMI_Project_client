@@ -3,7 +3,9 @@ package com.lx.Beans;
 public class UserBean {
 	private String role;
 	private String uname;
-	private String password;
+	private String password;	
+	
+	
 	public String getRole() {
 		return role;
 	}

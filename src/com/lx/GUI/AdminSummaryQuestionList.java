@@ -1,15 +1,10 @@
 package com.lx.GUI;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Map;
 
@@ -30,11 +25,10 @@ import org.codehaus.jackson.type.TypeReference;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 
 import com.lx.Beans.FeedBackBean;
-import com.lx.Beans.Summary_answerCountBean;
 import com.lx.Interfaces.FeedBackI;
 
 public class AdminSummaryQuestionList {
@@ -95,7 +89,7 @@ public class AdminSummaryQuestionList {
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				mainPanel.setVisible(false);
-				new Admin(frame);
+				new Admin(frame,null);
 			}
 		});
 
@@ -229,8 +223,8 @@ public class AdminSummaryQuestionList {
 //		pieDataSet.setValue("Two", new Integer(30));
 //		pieDataSet.setValue("Three", new Integer(50));
 		
-		JFreeChart chart = ChartFactory.createPieChart3D("Pie chart "+qid, pieDataSet, true,true,true);
-		PiePlot3D p = (PiePlot3D) chart.getPlot();
+		JFreeChart chart = ChartFactory.createPieChart("Pie chart "+qid, pieDataSet, true,true,true);
+		PiePlot p = (PiePlot) chart.getPlot();
 //		p.setForegroundAlpha(TOP_ALIGNMENT);
 		ChartFrame frame=new ChartFrame("Pie Chart", chart);
 		

@@ -128,7 +128,7 @@ public class AdminQuestionsList {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 //				frame.setVisible(false);
-				new Admin(frame);
+				new Admin(frame,null);
 			}
 		});
 	}

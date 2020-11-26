@@ -34,7 +34,7 @@ import java.awt.Cursor;
 public class login_pg {
 
 	private ObjectMapper mapper;
-	private UserBean[] user;
+	private UserBean currentUser = new UserBean();
 
 	private JFrame frame;
 	private JPanel panel;
@@ -95,15 +95,15 @@ public class login_pg {
 		
 		mapper = new ObjectMapper();
 		
-		try {
-			user = mapper.readValue(new File("users.json"), UserBean[].class);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			user = mapper.readValue(new File("users.json"), UserBean[].class);
+//		} catch (JsonParseException e) {
+//			e.printStackTrace();
+//		} catch (JsonMappingException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		
 		
 		btnLogin.addActionListener(new ActionListener() {
@@ -116,34 +116,32 @@ public class login_pg {
 				
 				Boolean resulte = false;
 				String role = null ;
-				System.out.println("xd : "+role);
 				
 				try {
 					UsersEvents_Interface user = (UsersEvents_Interface) Naming.lookup("rmi://localhost/UserEvents");
 					
 					role = user.Login(username,password);
+
+					System.out.println("xd : "+role);
 					
 					if (role != null && !role.trim().isEmpty()) {
 						JOptionPane.showMessageDialog(frame, "Succesfully Logged");
+												
+						currentUser.setUname(username);
+						currentUser.setRole(role);
 						
 						if(role.equals("admin")) {
 							panel.setVisible(false);
-							new Admin(frame);						
+							new Admin(frame,currentUser);						
 						}else {
 							panel.setVisible(false);
-							new Customer_feedback_pg(frame);			
+							new C_Dashboard(frame,currentUser);			
 						}
 					}else {
 						JOptionPane.showMessageDialog(frame, "Invalid username or password");
 					}
 					
 					
-				} catch (MalformedURLException err) {
-					err.printStackTrace();
-				} catch (RemoteException err) {
-					err.printStackTrace();
-				} catch (NotBoundException err) {
-					err.printStackTrace();
 				} catch (Exception err)  {
 					err.printStackTrace();
 				}				

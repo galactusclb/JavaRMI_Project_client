@@ -1,10 +1,10 @@
 package com.lx.GUI;
 
-import java.awt.Color;
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 
-public class MainGUI {
+public class AdminUsersList {
 
 	private JFrame frame;
 
@@ -15,7 +15,7 @@ public class MainGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainGUI window = new MainGUI();
+					AdminUsersList window = new AdminUsersList();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -27,7 +27,7 @@ public class MainGUI {
 	/**
 	 * Create the application.
 	 */
-	public MainGUI() {
+	public AdminUsersList() {
 		initialize();
 	}
 
@@ -36,19 +36,8 @@ public class MainGUI {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setVisible(true);
-		frame.getContentPane().setBackground(Color.WHITE);
-		frame.getContentPane().setLayout(null);
-		
-		frame.setTitle("GrandLuck University ");
-		frame.setResizable(false);
-		frame.setBounds(300, 100, 1200, 850);
+		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-//		frame.setVisible(false);
-//		new AdminQuestions(frame,0);
-//		new Admin(frame,null);
-		new login_pg(frame);
-//		new AdminQuestionsList2(frame);
 	}
+
 }

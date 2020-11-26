@@ -12,6 +12,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.lx.Beans.UserBean;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -20,28 +23,12 @@ import java.awt.event.ActionEvent;
 public class Admin {
 
 	private JFrame frame;
-
-	/**
-	 * Launch the application.
-//	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					Admin window = new Admin();
-//					window.frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
-	 * Create the application.
-	 */
-	public Admin(JFrame frame) {
+	private UserBean currentUser;
+	
+	
+	public Admin(JFrame frame,UserBean currentUser) {
 		this.frame=frame;
+		this.currentUser = currentUser;
 		initialize();
 	}
 
@@ -147,8 +134,9 @@ public class Admin {
 		
 		btnSummary.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				frame.setVisible(false);
-				new AdminSummary();
+				panel.setVisible(false);
+				panel_1.setVisible(false);
+				new AdminSummaryQuestionList(frame);
 			}
 		});
 		
