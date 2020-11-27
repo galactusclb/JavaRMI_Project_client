@@ -24,6 +24,7 @@ public class Admin {
 
 	private JFrame frame;
 	private UserBean currentUser;
+	private JPanel mainPanel,panel,panel_1;
 	
 	
 	public Admin(JFrame frame,UserBean currentUser) {
@@ -36,20 +37,18 @@ public class Admin {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-//		frame = new JFrame();
-//		frame.getContentPane().setBackground(new Color(245, 245, 245));
-//		frame.getContentPane().setLayout(null);
-//		frame.setVisible(true);
-//		frame.setTitle("GrandLuck University - Admin");
-//		frame.setResizable(false);
-//		frame.setBounds(300, 100, 1200, 850);
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainPanel = new JPanel();
+		mainPanel.setBounds(0, 0, 1200, 820);
+		mainPanel.setBackground(new Color(0, 0, 0, 0));
+//		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		frame.getContentPane().add(mainPanel);
+		mainPanel.setLayout(null);
 
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setVisible(true);
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(0, 0, 1200, 100);
-		frame.getContentPane().add(panel);
+		mainPanel.add(panel);
 		panel.setLayout(null);
 		
 		JLabel label_1 = new JLabel("");
@@ -58,22 +57,22 @@ public class Admin {
 		label_1.setBounds(53, 10, 180, 80);
 		panel.add(label_1);
 		
-		JButton btnLogout = new JButton("Logout");
-		btnLogout.setBackground(new Color(224, 58, 0));
-		btnLogout.setForeground(Color.WHITE);
-		btnLogout.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//		btnLogout.setOpaque(false);
-//		btnLogout.setContentAreaFilled(false);
+		JButton btnLogout = new JButton("");
+		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnLogout.setBorder(null);
+		btnLogout.setOpaque(false);
+		btnLogout.setBackground(new Color(0,0,0,0));
 		btnLogout.setFocusable(false);
-		btnLogout.setBounds(1019, 36, 97, 25);
+		btnLogout.setContentAreaFilled(false);
+		btnLogout.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/on-off-button.png")));
+		btnLogout.setBounds(1115, 24, 58, 41);
 		panel.add(btnLogout);
 
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		panel_1.setVisible(true);
 		panel_1.setBackground(new Color(1, 24, 55));
 		panel_1.setBounds(0, 99, 1200, 720);
-		frame.getContentPane().add(panel_1);
+		mainPanel.add(panel_1);
 		panel_1.setLayout(null);
 		
 		JTextField txtAddQuestions = new JTextField();
@@ -87,72 +86,141 @@ public class Admin {
 		txtAddQuestions.setColumns(10);
 		
 //		JButton btnCustomizeQuestions = new JButton("Customize Questions");
-		JButton btnCustomizeQuestions = new JButton("");
-		btnCustomizeQuestions.setBackground(new Color(0,0,0,0));
-		btnCustomizeQuestions.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		btnCustomizeQuestions.setOpaque(false);
-		btnCustomizeQuestions.setContentAreaFilled(false);
-		btnCustomizeQuestions.setFocusable(false);
-		btnCustomizeQuestions.setBorder(null);
-		btnCustomizeQuestions.setBounds(206, 135, 170, 155);
-		panel_1.add(btnCustomizeQuestions);
+		
+//		JButton btnCustomizeQuestions = new JButton("");
+//		btnCustomizeQuestions.setBackground(new Color(0,0,0,0));
+//		btnCustomizeQuestions.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//		btnCustomizeQuestions.setOpaque(false);
+//		btnCustomizeQuestions.setContentAreaFilled(false);
+//		btnCustomizeQuestions.setFocusable(false);
+//		btnCustomizeQuestions.setBorder(null);
+//		btnCustomizeQuestions.setBounds(720, 135, 176, 194);
+//		panel_1.add(btnCustomizeQuestions);
+		
+//		JLabel lblNewLabel = new JLabel("");
+//		lblNewLabel.setIcon(new ImageIcon(Admin.class.getResource("/images/admin dashboard.jpg")));
+//		lblNewLabel.setBounds(0, 0, 1200, 720);
+//		panel_1.add(lblNewLabel);
+		
+		
+		JPanel tileS = new JPanel();
+		tileS.setLayout(null);
+		tileS.setOpaque(false);
+		tileS.setBorder(null);
+		tileS.setBounds(495, 127, 182, 206);
+		panel_1.add(tileS);
+		
+		JButton btnSummary = new JButton("");
+		btnSummary.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnSummary.setOpaque(false);
+		btnSummary.setFocusable(false);
+		btnSummary.setContentAreaFilled(false);
+		btnSummary.setBorder(null);
+		btnSummary.setBackground(new Color(0, 0, 0, 0));
+		btnSummary.setBounds(0, 5, 175, 198);
+		tileS.add(btnSummary);
+		
+		JLabel lblSIcon = new JLabel("");
+		lblSIcon.setIcon(new ImageIcon(Admin.class.getResource("/images/activity.png")));
+		lblSIcon.setBounds(77, 76, 21, 24);
+		tileS.add(lblSIcon);
+		
+		JLabel lblSLbl = new JLabel("SUMMARY");
+		lblSLbl.setForeground(new Color(255, 186, 8));
+		lblSLbl.setFont(new Font("Calibri", Font.PLAIN, 18));
+		lblSLbl.setBounds(50, 139, 87, 23);
+		tileS.add(lblSLbl);
+		
+		JLabel lblS = new JLabel("");
+		lblS.setIcon(new ImageIcon(Admin.class.getResource("/images/Rectangle_2.png")));
+		lblS.setBounds(0, 5, 175, 198);
+		tileS.add(lblS);
+		
+		JPanel tileQ = new JPanel();
+		tileQ.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		tileQ.setBorder(null);
+		tileQ.setOpaque(false);
+		tileQ.setBounds(177, 127, 182, 206);
+		panel_1.add(tileQ);
+		tileQ.setLayout(null);
 		
 		//Summary btn
-		JButton btnSummary = new JButton("");
-		btnSummary.setBackground(new Color(0,0,0,0));
-		btnSummary.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		btnSummary.setOpaque(false);
-		btnSummary.setContentAreaFilled(false);
-		btnSummary.setFocusable(false);
-		btnSummary.setBorder(null);
-		btnSummary.setBounds(516, 135, 170, 155);
-		panel_1.add(btnSummary);
+		JButton btnQuestions = new JButton("");
+		btnQuestions.setBounds(0, 5, 175, 198);
+		tileQ.add(btnQuestions);
+		btnQuestions.setBackground(new Color(0,0,0,0));
+		btnQuestions.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		btnQuestions.setOpaque(false);
+		btnQuestions.setContentAreaFilled(false);
+		btnQuestions.setFocusable(false);
+		btnQuestions.setBorder(null);
 		
-		//users btn
+		JLabel lblQIcon = new JLabel("");
+		lblQIcon.setBounds(77, 76, 21, 24);
+		tileQ.add(lblQIcon);
+		lblQIcon.setIcon(new ImageIcon(Admin.class.getResource("/images/addfolderalt.png")));
+		
+		JLabel lblQLbl = new JLabel("QUESTIONS");
+		lblQLbl.setBounds(44, 139, 87, 23);
+		tileQ.add(lblQLbl);
+		lblQLbl.setFont(new Font("Calibri", Font.PLAIN, 18));
+		lblQLbl.setForeground(new Color(255, 186, 8));
+		
+		JLabel lblQ = new JLabel("");
+		lblQ.setBounds(0, 5, 175, 198);
+		tileQ.add(lblQ);
+		lblQ.setIcon(new ImageIcon(Admin.class.getResource("/images/Rectangle_2.png")));
+		
+		JPanel tileU = new JPanel();
+		tileU.setBounds(833, 127, 182, 206);
+		panel_1.add(tileU);
+		tileU.setLayout(null);
+		tileU.setOpaque(false);
+		tileU.setBorder(null);
+		
 		JButton btnUsers = new JButton("");
-		btnUsers.setBackground(new Color(0,0,0,0));
-		btnUsers.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		btnUsers.setOpaque(false);
-		btnUsers.setContentAreaFilled(false);
 		btnUsers.setFocusable(false);
+		btnUsers.setContentAreaFilled(false);
 		btnUsers.setBorder(null);
-		btnUsers.setBounds(825, 135, 170, 155);
-		panel_1.add(btnUsers);
+		btnUsers.setBackground(new Color(0, 0, 0, 0));
+		btnUsers.setBounds(0, 5, 175, 198);
+		tileU.add(btnUsers);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(Admin.class.getResource("/images/admin dashboard.jpg")));
-		lblNewLabel.setBounds(0, 0, 1200, 720);
-		panel_1.add(lblNewLabel);
+		JLabel lblUIcon = new JLabel("");
+		lblUIcon.setIcon(new ImageIcon(Admin.class.getResource("/images/t_users.png")));
+		lblUIcon.setBounds(77, 76, 21, 24);
+		tileU.add(lblUIcon);
 		
-		btnCustomizeQuestions.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				panel.setVisible(false);
-				panel_1.setVisible(false);
-				new AdminQuestionsList2(frame);
-			}
-		});
+		JLabel lblULbl = new JLabel("USERS");
+		lblULbl.setForeground(new Color(255, 186, 8));
+		lblULbl.setFont(new Font("Calibri", Font.PLAIN, 18));
+		lblULbl.setBounds(65, 139, 60, 23);
+		tileU.add(lblULbl);
+		
+		JLabel lblU = new JLabel("");
+		lblU.setIcon(new ImageIcon(Admin.class.getResource("/images/Rectangle_2.png")));
+		lblU.setBounds(0, 5, 175, 198);
+		tileU.add(lblU);
 		
 		btnSummary.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				panel.setVisible(false);
-				panel_1.setVisible(false);
+				mainPanel.setVisible(false);
 				new AdminSummaryQuestionList(frame);
 			}
 		});
 		
-		btnUsers.addActionListener(new ActionListener() {
+		btnQuestions.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				panel.setVisible(false);
-				panel_1.setVisible(false);
-				new AdminSummaryQuestionList(frame);
+				mainPanel.setVisible(false);
+				new AdminQuestionsList2(frame);
 			}
 		});
 		
 		
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				panel.setVisible(false);
-				panel_1.setVisible(false);
+				mainPanel.setVisible(false);
 				new login_pg(frame);
 			}
 		});

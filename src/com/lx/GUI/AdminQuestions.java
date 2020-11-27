@@ -49,6 +49,7 @@ public class AdminQuestions {
 
 		if (Optional.ofNullable(qId).orElse(0) != 0) {
 //			System.out.println(qId);
+			this.txtAddQuestions.setText("Edit Question");
 			this.editQuestionId = qId;
 
 			try {

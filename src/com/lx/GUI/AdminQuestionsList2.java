@@ -2,6 +2,7 @@ package com.lx.GUI;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -17,17 +18,20 @@ import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -47,11 +51,13 @@ import com.lx.Interfaces.FeedBackI;
 
 import javax.swing.JTable;
 import javax.swing.JCheckBox;
+import java.awt.Component;
+import java.awt.Rectangle;
 
 public class AdminQuestionsList2 {
 
 	private JFrame frame;
-	private JPanel mainPanel,panel, panel_1;
+	private JPanel mainPanel, panel, panel_1;
 	private JTextField txtAddQuestions;
 	private JTable table;
 
@@ -83,6 +89,28 @@ public class AdminQuestionsList2 {
 		label_1.setBackground(new Color(1, 25, 54));
 		label_1.setBounds(53, 10, 180, 80);
 		panel.add(label_1);
+		
+		JButton btnLogout = new JButton("");
+		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnLogout.setBorder(null);
+		btnLogout.setOpaque(false);
+		btnLogout.setBackground(new Color(0,0,0,0));
+		btnLogout.setFocusable(false);
+		btnLogout.setContentAreaFilled(false);
+		btnLogout.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/on-off-button.png")));
+		btnLogout.setBounds(1115, 24, 58, 41);
+		panel.add(btnLogout);
+		
+		JButton btnHome = new JButton("");
+		btnHome.setBackground(new Color(0,0,0,0));
+		btnHome.setFocusable(false);
+		btnHome.setContentAreaFilled(false);
+		btnHome.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnHome.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/home.png")));
+		btnHome.setBorder(null);
+		btnHome.setOpaque(false);
+		btnHome.setBounds(1054, 23, 58, 41);
+		panel.add(btnHome);
 
 		panel_1 = new JPanel();
 		panel_1.setBackground(new Color(1, 24, 55));
@@ -90,50 +118,86 @@ public class AdminQuestionsList2 {
 		mainPanel.add(panel_1);
 		panel_1.setLayout(null);
 
-		JButton btnAdd = new JButton("Add");
-		btnAdd.setForeground(Color.WHITE);
-		btnAdd.setFont(new Font("Calibri", Font.PLAIN, 22));
-		btnAdd.setBackground(new Color(255, 186, 8));
-		btnAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//		btnAdd.setOpaque(false);
-//		btnAdd.setContentAreaFilled(false);
+		JButton btnAdd = new JButton("");
+		btnAdd.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/add.png")));
+		btnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnAdd.setContentAreaFilled(false);
 		btnAdd.setBorder(null);
+		btnAdd.setOpaque(false);
 		btnAdd.setFocusable(false);
-		btnAdd.setBounds(1022, 46, 112, 45);
+		btnAdd.setBackground(new Color(0,0,0,0));
+//		btnAdd.setFont(new Font("Calibri", Font.PLAIN, 22));
+		btnAdd.setBounds(1083, 115, 52, 45);
 		panel_1.add(btnAdd);
 
 		JButton btnBack = new JButton("Back");
-		btnBack.setBounds(1053, 667, 97, 25);
+		btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnBack.setBorder(null);
+		btnBack.setFont(new Font("Calibri", Font.PLAIN, 18));
+		btnBack.setFocusable(false);
+		btnBack.setBackground(new Color(255, 186, 8));
+		btnBack.setBounds(1056, 644, 104, 45);
 		panel_1.add(btnBack);
 
 		txtAddQuestions = new JTextField();
 		txtAddQuestions.setText("Questions");
 		txtAddQuestions.setBorder(null);
 		txtAddQuestions.setOpaque(false);
-		txtAddQuestions.setForeground(Color.WHITE);
+		txtAddQuestions.setForeground(new Color(255, 186, 8));
 		txtAddQuestions.setFont(new Font("Calibri", Font.PLAIN, 28));
-		txtAddQuestions.setBounds(532, 49, 161, 37);
+		txtAddQuestions.setBounds(554, 49, 139, 37);
 		panel_1.add(txtAddQuestions);
 		txtAddQuestions.setColumns(10);
-		
+
 		JCheckBox checkboxStatus = new JCheckBox("Status ");
-		checkboxStatus.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		checkboxStatus.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		checkboxStatus.setFocusable(false);
+		checkboxStatus.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		checkboxStatus.setForeground(Color.WHITE);
 		checkboxStatus.setBorder(null);
 		checkboxStatus.setOpaque(false);
-		checkboxStatus.setBounds(69, 87, 76, 25);
+		checkboxStatus.setBounds(67, 124, 76, 25);
 		panel_1.add(checkboxStatus);
 
-		JButton btnReport = new JButton("Report");
-		btnReport.setBounds(883, 57, 97, 25);
+		JButton btnReport = new JButton("");
+		btnReport.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnReport.setBackground(new Color(0,0,0,0));
+		btnReport.setContentAreaFilled(false);
+		btnReport.setBorder(null);
+		btnReport.setOpaque(false);
+		btnReport.setFocusable(false);
+		btnReport.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/profit-report.png")));
+		btnReport.setBounds(1027, 118, 44, 39);
 		panel_1.add(btnReport);
-		
-		JButton btnReload = new JButton("Reload");
-		btnReload.setBounds(172, 88, 97, 25);
+
+		JButton btnReload = new JButton("");
+		btnReload.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnReload.setContentAreaFilled(false);
+		btnReload.setBorder(null);
+		btnReload.setOpaque(false);
+		btnReload.setFocusable(false);
+		btnReload.setBackground(new Color(0,0,0,0));
+		btnReload.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/reload.png")));
+		btnReload.setBounds(145, 119, 44, 39);
 		panel_1.add(btnReload);
-		
+
 		displayTable(false);
 
+
+		btnHome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				mainPanel.setVisible(false);
+				new Admin(frame, null);
+			}
+		});
+
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainPanel.setVisible(false);
+				new login_pg(frame);
+			}
+		});
+		
 		btnAdd.addActionListener(new ActionListener() {
 
 			@Override
@@ -152,19 +216,16 @@ public class AdminQuestionsList2 {
 
 //		table = new JTable();
 
-		
-		
-
 		btnReload.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (checkboxStatus.isSelected()) {
 					displayTable(true);
-				}else {
+				} else {
 					displayTable(false);
 				}
 			}
 		});
-		
+
 		btnReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String currentPath = System.getProperty("user.dir");
@@ -185,15 +246,15 @@ public class AdminQuestionsList2 {
 
 //					Paragraph para = new Paragraph("Test GL_Feedback_QA_"+timeStamp+".pdf");
 //					document.add(para);
-					
+
 					Paragraph para = new Paragraph("Questionnaire List");
 					para.setSpacingAfter(35);
 					para.setAlignment(Element.ALIGN_CENTER);
 					document.add(para);
-					
+
 					para = new Paragraph(" ");
 					document.add(para);
-					
+
 					PdfPTable ptable = new PdfPTable(4);
 
 					// add table header
@@ -215,15 +276,18 @@ public class AdminQuestionsList2 {
 
 					for (FeedBackBean fb : model) {
 //						for (int j = 0; j < 5; j++) {
-							ptable.addCell(fb.getQuestion());
-							ptable.addCell(fb.getAnswers());
-							ptable.addCell(fb.getType());
+						ptable.addCell(fb.getQuestion());
+						ptable.addCell(fb.getAnswers());
+						ptable.addCell(fb.getType());
 //						}
 					}
 					document.add(ptable);
-					
-					document.close();
 
+					document.close();
+					
+					JOptionPane.showMessageDialog(frame, "Report export successfully.\n "
+							+ currentPath + "\\GL_Feedback_QA_" + timeStamp + ".pdf");
+					
 					System.out.println(
 							"pdf create is finished. " + currentPath + "\\GL_Feedback_QA_" + timeStamp + ".pdf");
 				} catch (Exception e1) {
@@ -234,10 +298,9 @@ public class AdminQuestionsList2 {
 			}
 		});
 	}
-	
-	
-    public void displayTable(boolean checked){
-    	FeedBackI feed = null;
+
+	public void displayTable(boolean checked) {
+		FeedBackI feed = null;
 		FeedBackBean[] model = null;
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -309,10 +372,21 @@ public class AdminQuestionsList2 {
 //				{ "Sue", "Black", "Knitting", new Integer(2), new Boolean(false) },
 //				{ "Jane", "White", "Speed reading", new Integer(20), new Boolean(true) },
 //				{ "Joe", "Brown", "Pool", new Integer(10), new Boolean(false) } };
+
 		String[] columnNames = { "Id", "order", "type", "question", "answers" };
 
 		JTable jt = new JTable(data, columnNames);
+		jt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jt.setSelectionBackground(Color.ORANGE);
+		jt.setRowHeight(22);
+		jt.setBackground(Color.white);
 		jt.setFont(new Font("Calibri", Font.PLAIN, 18));
+
+		JTableHeader header = jt.getTableHeader();
+		header.setBackground(Color.BLACK);
+		header.setForeground(new Color(255, 186, 8));
+		header.setFont(new Font("Calibri", Font.BOLD, 19));
+		header.setPreferredSize(new Dimension(100, 50));
 
 		TableColumn column = null;
 		for (int i = 0; i < 3; i++) {
@@ -333,13 +407,11 @@ public class AdminQuestionsList2 {
 //		jt.setBounds(80,139,964,300); 
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 139, 1106, 400);
+		scrollPane.setViewportBorder(null);
+		scrollPane.setBounds(38, 182, 1122, 400);
+		scrollPane.getViewport().setBackground(Color.WHITE);
 		scrollPane.setViewportView(jt);
-//		scrollPane.add(jt);
-
 		panel_1.add(scrollPane);
-		
-		
 
 		// get clicked row
 		jt.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -365,5 +437,3 @@ public class AdminQuestionsList2 {
 		});
 	}
 }
-
-

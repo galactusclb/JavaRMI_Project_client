@@ -1,6 +1,8 @@
 package com.lx.GUI;
 
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +20,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -72,8 +75,35 @@ public class AdminSummaryQuestionList {
 		mainPanel.add(panel_1);
 		panel_1.setLayout(null);
 
+		JButton btnLogout = new JButton("");
+		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnLogout.setBorder(null);
+		btnLogout.setOpaque(false);
+		btnLogout.setBackground(new Color(0,0,0,0));
+		btnLogout.setFocusable(false);
+		btnLogout.setContentAreaFilled(false);
+		btnLogout.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/on-off-button.png")));
+		btnLogout.setBounds(1115, 24, 58, 41);
+		panel.add(btnLogout);
+		
+		JButton btnHome = new JButton("");
+		btnHome.setBackground(new Color(0,0,0,0));
+		btnHome.setFocusable(false);
+		btnHome.setContentAreaFilled(false);
+		btnHome.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnHome.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/home.png")));
+		btnHome.setBorder(null);
+		btnHome.setOpaque(false);
+		btnHome.setBounds(1054, 23, 58, 41);
+		panel.add(btnHome);
+		
 		btnBack = new JButton("Back");
-		btnBack.setBounds(1053, 667, 97, 25);
+		btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnBack.setBorder(null);
+		btnBack.setFont(new Font("Calibri", Font.PLAIN, 18));
+		btnBack.setFocusable(false);
+		btnBack.setBackground(new Color(255, 186, 8));
+		btnBack.setBounds(1056, 644, 104, 45);
 		panel_1.add(btnBack);
 
 		txtAddQuestions = new JTextField();
@@ -82,10 +112,11 @@ public class AdminSummaryQuestionList {
 		txtAddQuestions.setOpaque(false);
 		txtAddQuestions.setForeground(Color.WHITE);
 		txtAddQuestions.setFont(new Font("Calibri", Font.PLAIN, 28));
-		txtAddQuestions.setBounds(532, 49, 161, 37);
+		txtAddQuestions.setBounds(476, 49, 240, 37);
 		panel_1.add(txtAddQuestions);
 		txtAddQuestions.setColumns(10);
 
+		
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				mainPanel.setVisible(false);
@@ -93,6 +124,20 @@ public class AdminSummaryQuestionList {
 			}
 		});
 
+		btnHome.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				mainPanel.setVisible(false);
+				new Admin(frame, null);
+			}
+		});
+
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mainPanel.setVisible(false);
+				new login_pg(frame);
+			}
+		});
+		
 		// table display
 		FeedBackI feed = null;
 		FeedBackBean[] model = null;
@@ -132,9 +177,19 @@ public class AdminSummaryQuestionList {
 //		
 		String[] columnNames = { "Id", "order", "type", "question", "answers" };
 
-		JTable jt = new JTable(data, columnNames);
+		JTable jt = new JTable(data, columnNames);		
+		jt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		jt.setSelectionBackground(Color.ORANGE);
+		jt.setRowHeight(22);
+		jt.setBackground(Color.white);
 		jt.setFont(new Font("Calibri", Font.PLAIN, 18));
 
+		JTableHeader header = jt.getTableHeader();
+		header.setBackground(Color.BLACK);
+		header.setForeground(new Color(255, 186, 8));
+		header.setFont(new Font("Calibri", Font.BOLD, 19));
+		header.setPreferredSize(new Dimension(100, 50));
+		
 		TableColumn column = null;
 		for (int i = 0; i < 3; i++) {
 			column = jt.getColumnModel().getColumn(i);
@@ -151,7 +206,7 @@ public class AdminSummaryQuestionList {
 		}
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 139, 1106, 400);
+		scrollPane.setBounds(58, 141, 1106, 400);
 		scrollPane.setViewportView(jt);
 
 		panel_1.add(scrollPane);
@@ -226,6 +281,8 @@ public class AdminSummaryQuestionList {
 		JFreeChart chart = ChartFactory.createPieChart("Pie chart "+qid, pieDataSet, true,true,true);
 		PiePlot p = (PiePlot) chart.getPlot();
 //		p.setForegroundAlpha(TOP_ALIGNMENT);
+		chart.getPlot().setBackgroundPaint( Color.WHITE );
+		chart.setBorderVisible(false);
 		ChartFrame frame=new ChartFrame("Pie Chart", chart);
 		
 		frame.setVisible(true);

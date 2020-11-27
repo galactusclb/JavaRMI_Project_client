@@ -101,19 +101,29 @@ public class Customer_feedback_pg {
 
 //		Elments 
 
-		JButton btnLogout = new JButton("Logout");
-		btnLogout.setBackground(new Color(224, 58, 0));
-		btnLogout.setForeground(Color.WHITE);
-		btnLogout.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//		btnLogout.setOpaque(false);
-//		btnLogout.setContentAreaFilled(false);
+		
+		
+		JButton btnLogout = new JButton("");
+		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnLogout.setBorder(null);
+		btnLogout.setOpaque(false);
+		btnLogout.setBackground(new Color(0,0,0,0));
 		btnLogout.setFocusable(false);
-		btnLogout.setBounds(1019, 36, 97, 25);
+		btnLogout.setContentAreaFilled(false);
+		btnLogout.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/on-off-button.png")));
+		btnLogout.setBounds(1115, 24, 58, 41);
 		panel.add(btnLogout);
 		
-		JButton btnDashboard = new JButton("Dashboard");
-		btnDashboard.setBounds(897, 36, 97, 25);
-		panel.add(btnDashboard);
+		JButton btnHome = new JButton("");
+		btnHome.setBackground(new Color(0,0,0,0));
+		btnHome.setFocusable(false);
+		btnHome.setContentAreaFilled(false);
+		btnHome.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnHome.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/home.png")));
+		btnHome.setBorder(null);
+		btnHome.setOpaque(false);
+		btnHome.setBounds(1054, 23, 58, 41);
+		panel.add(btnHome);
 
 		textField = new JTextField();
 		textField.setForeground(Color.WHITE);
@@ -274,7 +284,7 @@ public class Customer_feedback_pg {
 			}
 		});
 		
-		btnDashboard.addActionListener(new ActionListener() {
+		btnHome.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				mainPanel.setVisible(false);
 				new C_Dashboard(frame, null);

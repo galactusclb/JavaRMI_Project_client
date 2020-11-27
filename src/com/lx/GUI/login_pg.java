@@ -90,7 +90,7 @@ public class login_pg {
 		JLabel lblS = new JLabel("");
 		lblS.setBackground(Color.WHITE);
 		lblS.setIcon(new ImageIcon(login_pg.class.getResource("/images/login_bg_2.jpg")));
-		lblS.setBounds(0, 0, 1182, 803);
+		lblS.setBounds(0, 0, 1194, 815);
 		panel.add(lblS);
 		
 		mapper = new ObjectMapper();

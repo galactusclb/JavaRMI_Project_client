@@ -55,9 +55,20 @@ public class C_Dashboard {
 		label_1.setBounds(53, 10, 180, 80);
 		panel.add(label_1);
 		
+		JButton btnLogout = new JButton("");
+		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnLogout.setIcon(new ImageIcon(C_Dashboard.class.getResource("/images/on-off-button.png")));
+		btnLogout.setOpaque(false);
+		btnLogout.setFocusable(false);
+		btnLogout.setContentAreaFilled(false);
+		btnLogout.setBorder(null);
+		btnLogout.setBackground(new Color(0, 0, 0, 0));
+		btnLogout.setBounds(1115, 24, 58, 41);
+		panel.add(btnLogout);
+		
 		JLabel lblUsername = new JLabel("");
 		lblUsername.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		lblUsername.setBounds(990, 30, 156, 16);
+		lblUsername.setBounds(951, 39, 156, 16);
 		panel.add(lblUsername);
 		
 		panel_1 = new JPanel();
@@ -66,24 +77,55 @@ public class C_Dashboard {
 		mainPanel.add(panel_1);
 		panel_1.setLayout(null);
 		
-		JLabel lblFeedback = new JLabel("Feedback Form");
-		lblFeedback.setForeground(Color.WHITE);
-		lblFeedback.setBounds(161, 114, 97, 16);
-		panel_1.add(lblFeedback);
+		JPanel tileU = new JPanel();
+		tileU.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		tileU.setLayout(null);
+		tileU.setOpaque(false);
+		tileU.setBorder(null);
+		tileU.setBounds(115, 126, 182, 206);
+		panel_1.add(tileU);
 		
-		JButton btnFeedback = new JButton("Go");
-		btnFeedback.setBounds(161, 143, 97, 25);
-		panel_1.add(btnFeedback);
+		JButton btnFeedbacks = new JButton("");
+		btnFeedbacks.setOpaque(false);
+		btnFeedbacks.setFocusable(false);
+		btnFeedbacks.setContentAreaFilled(false);
+		btnFeedbacks.setBorder(null);
+		btnFeedbacks.setBackground(new Color(0, 0, 0, 0));
+		btnFeedbacks.setBounds(0, 5, 175, 198);
+		tileU.add(btnFeedbacks);
+		
+		JLabel lblFIcon = new JLabel("");
+		lblFIcon.setIcon(new ImageIcon(C_Dashboard.class.getResource("/images/activity.png")));
+		lblFIcon.setBounds(77, 76, 21, 24);
+		tileU.add(lblFIcon);
+		
+		JLabel lblFLbl = new JLabel("FEEDBACK");
+		lblFLbl.setForeground(new Color(255, 186, 8));
+		lblFLbl.setFont(new Font("Calibri", Font.PLAIN, 18));
+		lblFLbl.setBounds(48, 139, 90, 23);
+		tileU.add(lblFLbl);
+		
+		JLabel lblF = new JLabel("");
+		lblF.setIcon(new ImageIcon(C_Dashboard.class.getResource("/images/Rectangle_2.png")));
+		lblF.setBounds(0, 5, 175, 198);
+		tileU.add(lblF);
 		
 		
 		if (currentUser !=null) {
 			lblUsername.setText(currentUser.getUname());
 		}
 		
-		btnFeedback.addActionListener(new ActionListener() {
+		btnFeedbacks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				mainPanel.setVisible(false);
 				new Customer_feedback_pg(frame,currentUser);
+			}
+		});
+		
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				mainPanel.setVisible(false);
+				new login_pg(frame);
 			}
 		});
 	}
