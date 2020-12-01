@@ -225,5 +225,12 @@ public class Admin {
 			}
 		});
 		
+		btnUsers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				mainPanel.setVisible(false);
+				new AdminUsers(frame);
+			}
+		});
+		
 	}
 }

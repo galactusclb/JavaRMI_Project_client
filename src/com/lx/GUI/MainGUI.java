@@ -47,8 +47,8 @@ public class MainGUI {
 		
 //		frame.setVisible(false);
 //		new AdminQuestions(frame,0);
-		new Admin(frame,null);
-//		new login_pg(frame);
+//		new Admin(frame,null);
+		new login_pg(frame);
 //		new AdminQuestionsList2(frame);
 //		new C_Dashboard(frame, null);
 	}

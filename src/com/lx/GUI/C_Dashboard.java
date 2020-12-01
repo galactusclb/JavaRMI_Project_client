@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import com.lx.Beans.UserBean;
 
 import java.awt.event.ActionListener;
+import java.util.prefs.Preferences;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
 
@@ -23,12 +24,21 @@ public class C_Dashboard {
 	private JFrame frame;
 	private JPanel mainPanel,panel,panel_1;
 	private UserBean currentUser;
-
+	private JLabel lblUsername;
+	
+	public Preferences pref ;
 	
 	public C_Dashboard(JFrame frame,UserBean currentUser) {
+		pref = Preferences.userRoot().node("cockies");
+		
 		this.frame=frame;
 		this.currentUser = currentUser;
 		initialize();
+		
+		String user = null;
+		if (pref.get("uname", user) != null ) {
+			lblUsername.setText(pref.get("uname", user));
+		}
 	}
 
 	/**
@@ -66,7 +76,7 @@ public class C_Dashboard {
 		btnLogout.setBounds(1115, 24, 58, 41);
 		panel.add(btnLogout);
 		
-		JLabel lblUsername = new JLabel("");
+		lblUsername = new JLabel("");
 		lblUsername.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblUsername.setBounds(951, 39, 156, 16);
 		panel.add(lblUsername);
@@ -111,9 +121,9 @@ public class C_Dashboard {
 		tileU.add(lblF);
 		
 		
-		if (currentUser !=null) {
-			lblUsername.setText(currentUser.getUname());
-		}
+//		if (currentUser !=null) {
+//			lblUsername.setText(currentUser.getUname());
+//		}
 		
 		btnFeedbacks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
