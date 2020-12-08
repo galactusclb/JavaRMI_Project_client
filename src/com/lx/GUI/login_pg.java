@@ -45,23 +45,23 @@ public class login_pg {
 	private JTextField txtuname;
 	private JPasswordField txtpass;
 
-	public Preferences pref ;
+	public Preferences pref;
 
 	/**
 	 * Create the application.
 	 */
 	public login_pg(JFrame frame) {
 		pref = Preferences.userRoot().node("cockies");
-		
+
 		this.frame = frame;
 		initialize();
-		
+
 		String user = null;
 		String role = null;
 		String pass = null;
-		
+
 		System.out.println(pref.get("uname", user));
-		
+
 		if (pref.get("uname", user) != null && pref.get("password", pass) != null && pref.get("role", role) != null) {
 			txtuname.setText(pref.get("uname", user));
 			txtpass.setText(pref.get("password", pass));
@@ -125,7 +125,7 @@ public class login_pg {
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
-		
+
 //		setCockies("", "", "");
 
 		btnLogin.addActionListener(new ActionListener() {
@@ -136,8 +136,7 @@ public class login_pg {
 				String username = txtuname.getText();
 				String password = txtpass.getText();
 
-				Boolean resulte = false;
-				String role = null;
+				String resulte = null;
 
 				try {
 					UsersEvents_Interface user = (UsersEvents_Interface) Naming.lookup("rmi://localhost/UserEvents");
@@ -151,29 +150,39 @@ public class login_pg {
 //						System.out.println(jObject.getString("userID") + " " + jObject.getString("uName") + " "
 //								+ jObject.getString("role"));
 //					}
-					
-					role = user.Login(username, password);
 
-					System.out.println("logged role : " + role);
+//					role = user.Login(username, password);
 
-					if (role != null && !role.trim().isEmpty()) {
-						JOptionPane.showMessageDialog(frame, "Succesfully Logged");
+					resulte = user.LoginUsersApi(username, password);
 
-						currentUser.setUname(username);
-						currentUser.setRole(role);
+					System.out.println("logged role : " + resulte);
 
-						setCockies(username, password, role);
-						
-						if (role.equals("admin")) {
-							
-							panel.setVisible(false);
-							new Admin(frame, currentUser);
+					JSONObject jObject = null;
+
+					if (resulte != null) {
+						jObject = new JSONObject(resulte);
+
+//						if (role != null && !role.trim().isEmpty()) {
+						if (jObject.has("role")) {
+							JOptionPane.showMessageDialog(frame, "Succesfully Logged");
+
+							currentUser.setUname(username);
+							currentUser.setRole(jObject.getString("role"));
+
+							setCockies(username, password, jObject.getString("role"));
+
+							if (jObject.getString("role").equalsIgnoreCase("admin")) {
+								panel.setVisible(false);
+								new Admin(frame, currentUser);
+							} else {
+								panel.setVisible(false);
+								new C_Dashboard(frame, currentUser);
+							}
+
 						} else {
-							panel.setVisible(false);
-							new C_Dashboard(frame, currentUser);
+							JOptionPane.showMessageDialog(frame, "Invalid username or password");
 						}
-
-					} else {
+					}else {
 						JOptionPane.showMessageDialog(frame, "Invalid username or password");
 					}
 
@@ -183,13 +192,13 @@ public class login_pg {
 			}
 		});
 	}
-	
-	public void setCockies(String uname,String password,String role) {
-		
+
+	public void setCockies(String uname, String password, String role) {
+
 		pref.put("uname", uname);
 		pref.put("password", password);
 		pref.put("role", role);
-		
+
 		System.out.println("Saved.");
 	}
 }

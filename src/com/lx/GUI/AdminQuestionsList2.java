@@ -90,6 +90,7 @@ public class AdminQuestionsList2 {
 		label_1.setBounds(53, 10, 180, 80);
 		panel.add(label_1);
 		
+		
 		JButton btnLogout = new JButton("");
 		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnLogout.setBorder(null);

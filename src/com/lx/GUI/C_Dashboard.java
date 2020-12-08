@@ -120,6 +120,38 @@ public class C_Dashboard {
 		lblF.setBounds(0, 5, 175, 198);
 		tileU.add(lblF);
 		
+		JPanel tileU_1 = new JPanel();
+		tileU_1.setLayout(null);
+		tileU_1.setOpaque(false);
+		tileU_1.setBorder(null);
+		tileU_1.setBounds(467, 126, 182, 206);
+		panel_1.add(tileU_1);
+		
+		JButton btnAccount = new JButton("");
+		btnAccount.setOpaque(false);
+		btnAccount.setFocusable(false);
+		btnAccount.setContentAreaFilled(false);
+		btnAccount.setBorder(null);
+		btnAccount.setBackground(new Color(0, 0, 0, 0));
+		btnAccount.setBounds(0, 5, 175, 198);
+		tileU_1.add(btnAccount);
+		
+		JLabel lblAIcon = new JLabel("");
+		lblAIcon.setIcon(new ImageIcon(C_Dashboard.class.getResource("/images/t_users.png")));
+		lblAIcon.setBounds(77, 76, 21, 24);
+		tileU_1.add(lblAIcon);
+		
+		JLabel lblALbl = new JLabel("ACCOUNT");
+		lblALbl.setForeground(new Color(255, 186, 8));
+		lblALbl.setFont(new Font("Calibri", Font.PLAIN, 18));
+		lblALbl.setBounds(56, 140, 90, 23);
+		tileU_1.add(lblALbl);
+		
+		JLabel lblA = new JLabel("");
+		lblA.setIcon(new ImageIcon(C_Dashboard.class.getResource("/images/Rectangle_2.png")));
+		lblA.setBounds(0, 5, 175, 198);
+		tileU_1.add(lblA);
+		
 		
 //		if (currentUser !=null) {
 //			lblUsername.setText(currentUser.getUname());
@@ -129,6 +161,13 @@ public class C_Dashboard {
 			public void actionPerformed(ActionEvent arg0) {
 				mainPanel.setVisible(false);
 				new Customer_feedback_pg(frame,currentUser);
+			}
+		});
+		
+		btnAccount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				mainPanel.setVisible(false);
+				new Customer_account_pg(frame);
 			}
 		});
 		

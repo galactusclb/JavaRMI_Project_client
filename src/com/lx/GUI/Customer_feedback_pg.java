@@ -13,6 +13,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.prefs.Preferences;
 import java.awt.*;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -40,26 +41,30 @@ public class Customer_feedback_pg {
 	public JPanel mainPanel,panel,panel_1,panel_answers;
 	private JTextField textField;
 	public JButton btnSubmit;
+	private JTextField questionCount;
 
-	private UserBean currentUser;
+	public Preferences pref ;
 	public String[][] arrStr = new String[3][4];
 	JSONParser jsonp = new JSONParser();
 
 	int i = 0;
 	int total = 0;
 	int questionIndex = 0;
+	String user = null;
 
 	FeedBackBean[] model;
-	private JTextField questionCount;
 
-	/**
-	 * Create the application.
-	 */
+	
 	public Customer_feedback_pg(JFrame frame,UserBean currentUser) {
+		pref = Preferences.userRoot().node("cockies");
 		this.frame=frame;
-		this.currentUser = currentUser;
 		initialize();
 
+		
+		if (pref.get("uname", user) != null ) {
+			user = pref.get("uname", user);
+			System.out.println();
+		}
 //		for (int i = 0; i < arrStr.length; i++) {
 //			for (int j = 0; j < arrStr[i].length; j++) {
 //				arrStr[i][j] = "Str" + j;
@@ -83,7 +88,7 @@ public class Customer_feedback_pg {
 		
 		panel = new JPanel();
 		panel.setBackground(Color.WHITE);
-		panel.setBounds(0, 0, 1182, 100);
+		panel.setBounds(0, 0, 1200, 100);
 		mainPanel.add(panel);
 		panel.setLayout(null);
 
@@ -217,7 +222,6 @@ public class Customer_feedback_pg {
 						btnSubmit.setText("Submit");
 					}
 				}else if(questionIndex == model.length -1) {
-					int num=0;
 					boolean next = true;
 					JSONArray objArray = new JSONArray();
 					String output =null;
@@ -244,7 +248,7 @@ public class Customer_feedback_pg {
 						if (!next) {
 							JOptionPane.showMessageDialog(frame, "Please, answer for every questions before submit");
 						} else {
-							feed.clientFeedBack(currentUser.getUname(), output);
+							feed.clientFeedBack(user, output);
 							JOptionPane.showMessageDialog(frame, "Feedback submit successfully");
 							
 							//clear data

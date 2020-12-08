@@ -6,10 +6,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.rmi.Naming;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,6 +34,7 @@ import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
+import org.json.JSONObject;
 
 import com.lx.Beans.FeedBackBean;
 import com.lx.Interfaces.FeedBackI;
@@ -79,15 +84,15 @@ public class AdminSummaryQuestionList {
 		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnLogout.setBorder(null);
 		btnLogout.setOpaque(false);
-		btnLogout.setBackground(new Color(0,0,0,0));
+		btnLogout.setBackground(new Color(0, 0, 0, 0));
 		btnLogout.setFocusable(false);
 		btnLogout.setContentAreaFilled(false);
 		btnLogout.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/on-off-button.png")));
 		btnLogout.setBounds(1115, 24, 58, 41);
 		panel.add(btnLogout);
-		
+
 		JButton btnHome = new JButton("");
-		btnHome.setBackground(new Color(0,0,0,0));
+		btnHome.setBackground(new Color(0, 0, 0, 0));
 		btnHome.setFocusable(false);
 		btnHome.setContentAreaFilled(false);
 		btnHome.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -96,7 +101,7 @@ public class AdminSummaryQuestionList {
 		btnHome.setOpaque(false);
 		btnHome.setBounds(1054, 23, 58, 41);
 		panel.add(btnHome);
-		
+
 		btnBack = new JButton("Back");
 		btnBack.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnBack.setBorder(null);
@@ -116,11 +121,10 @@ public class AdminSummaryQuestionList {
 		panel_1.add(txtAddQuestions);
 		txtAddQuestions.setColumns(10);
 
-		
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				mainPanel.setVisible(false);
-				new Admin(frame,null);
+				new Admin(frame, null);
 			}
 		});
 
@@ -137,7 +141,7 @@ public class AdminSummaryQuestionList {
 				new login_pg(frame);
 			}
 		});
-		
+
 		// table display
 		FeedBackI feed = null;
 		FeedBackBean[] model = null;
@@ -157,27 +161,28 @@ public class AdminSummaryQuestionList {
 
 		int k = 0;
 		for (FeedBackBean fb : model) {
-			for (int j = 0; j < 5; j++) {
-				if (j == 0) {
-					data[k][j] = fb.get_id();
-				} else if (j == 1) {
-					data[k][j] = fb.getOrder();
-				} else if (j == 2) {
-					data[k][j] = fb.getType();
-				} else if (j == 3) {
-					data[k][j] = fb.getQuestion();
-				} else if (j == 4) {
-					data[k][j] = fb.getAnswers();
-				}
+			if (!fb.getType().equalsIgnoreCase("textArea")) {
+				for (int j = 0; j < 5; j++) {
+					if (j == 0) {
+						data[k][j] = fb.get_id();
+					} else if (j == 1) {
+						data[k][j] = fb.getOrder();
+					} else if (j == 2) {
+						data[k][j] = fb.getType();
+					} else if (j == 3) {
+						data[k][j] = fb.getQuestion();
+					} else if (j == 4) {
+						data[k][j] = fb.getAnswers();
+					}
 //		        data[i][j] = i + " gg "+ j;
+				}
+				++k;
 			}
-			++k;
 		}
-//		
-//		
+		
 		String[] columnNames = { "Id", "order", "type", "question", "answers" };
 
-		JTable jt = new JTable(data, columnNames);		
+		JTable jt = new JTable(data, columnNames);
 		jt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		jt.setSelectionBackground(Color.ORANGE);
 		jt.setRowHeight(22);
@@ -189,7 +194,7 @@ public class AdminSummaryQuestionList {
 		header.setForeground(new Color(255, 186, 8));
 		header.setFont(new Font("Calibri", Font.BOLD, 19));
 		header.setPreferredSize(new Dimension(100, 50));
-		
+
 		TableColumn column = null;
 		for (int i = 0; i < 3; i++) {
 			column = jt.getColumnModel().getColumn(i);
@@ -229,15 +234,32 @@ public class AdminSummaryQuestionList {
 					}
 //		    	    System.out.println("Selected: " + Integer.toString(selectedData));
 
-					displayPieChart(selectedData);
+//					displayPieChart(selectedData);
+//					chartImgPieChart() ;
+					displayChartConfiger(selectedData, null);
 				}
 			}
 		});
 	}
 
+	public void displayChartConfiger(int qid, String type) {
+		FeedBackI feed = null;
+
+		try {
+			feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
+			String response = feed.getclientFeedbackSummaryByQid(qid);
+
+			System.out.println(response);
+			chartImgPieChart(response);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void displayPieChart(int qid) {
 		DefaultPieDataset pieDataSet = new DefaultPieDataset();
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		FeedBackI feed = null;
 //		Summary_answerCountBean[] model = null;
@@ -246,47 +268,149 @@ public class AdminSummaryQuestionList {
 			feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
 			String response = feed.getclientFeedbackSummaryByQid(qid);
 //			model = mapper.readValue(response, FeedBackBean[].class);
-			
-			//for read map-like jason
-			Map<String, Object> map = mapper.readValue(response, new TypeReference<Map<String, Object>>() {});
-			
+
+			// for read map-like jason without using model structure
+			Map<String, Object> map = mapper.readValue(response, new TypeReference<Map<String, Object>>() {
+			});
+
 //			System.out.println(map.get("answersCount"));
 //			String answerCountList = map.get("answersCount").toString();
 //			System.out.println(answerCountList);
-			
+
 			List ansContList = (List) map.get("answersCount");
-			
+
 //			System.out.println(((Map)ansContList.get(0)).get("answer"));
-			
+
 			for (int i = 0; i < ansContList.size(); i++) {
-				String labelName = (String)((Map)ansContList.get(i)).get("answer");
-				int summaryCount = (int)((Map)ansContList.get(i)).get("count");
-				pieDataSet.setValue( labelName ,summaryCount );
+				String labelName = (String) ((Map) ansContList.get(i)).get("answer");
+				int summaryCount = (int) ((Map) ansContList.get(i)).get("count");
+				pieDataSet.setValue(labelName, summaryCount);
 			}
-	
-			
+
 //			model = mapper.readValue(answerCountList, Summary_answerCountBean[].class);
-			
+
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		
-		
-		
-		
+
 //		pieDataSet.setValue("one", new Integer(20));
 //		pieDataSet.setValue("Two", new Integer(30));
 //		pieDataSet.setValue("Three", new Integer(50));
-		
-		JFreeChart chart = ChartFactory.createPieChart("Pie chart "+qid, pieDataSet, true,true,true);
+
+		JFreeChart chart = ChartFactory.createPieChart("Pie chart " + qid, pieDataSet, true, true, true);
 		PiePlot p = (PiePlot) chart.getPlot();
 //		p.setForegroundAlpha(TOP_ALIGNMENT);
-		chart.getPlot().setBackgroundPaint( Color.WHITE );
+		chart.getPlot().setBackgroundPaint(Color.WHITE);
 		chart.setBorderVisible(false);
-		ChartFrame frame=new ChartFrame("Pie Chart", chart);
-		
+		ChartFrame frame = new ChartFrame("Pie Chart", chart);
+
 		frame.setVisible(true);
 //		frame.setSize(450,500);
 		frame.setBounds(600, 200, 600, 600);
+	}
+
+	public void chartImgPieChart(String json) {
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			Integer[] angle ;
+			String[] answers;
+			int totalCount ;
+			
+			Map<String, Object> map = mapper.readValue(json, new TypeReference<Map<String, Object>>() {
+			});
+
+			List ansContList = (List) map.get("answersCount");
+			
+			System.out.println(ansContList.size());
+			angle = new Integer[ansContList.size()];
+			answers = new String[ansContList.size()];
+			
+			for (int i = 0; i < ansContList.size(); i++) {
+				angle[i] = (Integer) ((Map) ansContList.get(i)).get("count");
+				answers[i] = (String) ((Map) ansContList.get(i)).get("answer");
+			}
+			
+			StringBuilder builder = new StringBuilder();//for angle 
+			StringBuilder builderAnswer = new StringBuilder();//for answers title
+			StringBuilder builderAnswerCount = new StringBuilder();//for display answers count
+			
+			for (int j = 0; j < answers.length; j++) {				
+				Integer x = (Integer) ((angle[j]*100)/7);
+				
+					builder.append(x);	
+					builderAnswer.append(answers[j]);
+					
+					if (angle[j]>0) {
+						builderAnswerCount.append(angle[j]);						
+					}
+					
+					if (j != answers.length-1) {
+						builder.append(",");
+						builderAnswer.append("|");
+						builderAnswerCount.append("|");
+					} 
+			}
+			
+			String strAngles = builder.toString();
+			String strAnswersTitle = builderAnswer.toString().replaceAll("\\s+","");
+			String strAnswersCount = builderAnswerCount.toString();
+			System.out.println(strAnswersCount);
+
+			totalCount = (int) map.get("questionsCount");
+			String title = "GG";
+			
+			
+//			JSONObject subObj = new JSONObject();
+//			subObj.put("formatter", "function(){if(this.y!=0){return this.y;}}");
+			
+//			JSONObject paramObj  = new JSONObject();
+//			paramObj.put("dataLabels", subObj);
+//			
+//			System.out.println(paramObj);
+			
+//			String chl = "Hello|World";
+//			System.out.println(URLEncoder.encode(chl, "UTF-8"));
+			
+			String path = "https://image-charts.com/chart?" 
+					+ "chco=FFFF10%2CFF2027"
+//					+ "&chd=t%3A"+ URLEncoder.encode(strAngles, "UTF-8")
+					+ "&chd=t%3A"+ strAngles
+					+ "&chdl="+strAnswersTitle+"&chdlp=b"
+//					+ "&chf=b0%2Clg%2C90%2C68cefd%2C0%2C96a6ff%2C1"
+					+ "&chl=" + strAnswersCount
+					+ "&chli=" + totalCount
+					+ "&chma=0%2C0%2C20%2C40&chs=700x600&cht=pd&chtt=" + title;
+//					+ "&dataLabels="+(URLEncoder.encode(subObj.toString(), "UTF-8"));
+			
+//			String path = "https://image-charts.com/chart?" 
+//					+ "chco=FFFF10%2CFF2027"
+//					+ "&chd=t"+strAngles
+//					+ "&chdl="+strAnswersTitle+"&chdlp=b"
+////					+ "&chf=b0%2Clg%2C90%2C68cefd%2C0%2C96a6ff%2C1"
+//					+ "&chl=" + strAnswersCount
+//					+ "&chli=" + totalCount
+//					+ "&chma=0%2C0%2C20%2C20&chs=700x600&cht=pd&chtt=" + title;
+
+//			String path = "https://image-charts.com/chart?" + "chd=t%3A" + angle1 + "%2C" + angle2 + "%2C" + angle3
+//					+ "%2C" + angle4 + "&chdl=" + type1 + "%7C" + type2 + "%7C" + type3 + "%7C" + type4 + "&chdlp=b"
+//					+ "&chf=b0%2Clg%2C90%2C68cefd%2C0%2C96a6ff%2C1" + "&chl=" + typeCount1 + "%7C" + typeCount2 + "%7C"
+//					+ typeCount3 + "%7C" + typeCount4 + "&chli=" + totalCount
+//					+ "%E2%82%AC&chma=0%2C0%2C20%2C20&chs=700x600&cht=pd&chtt=" + title;
+
+			System.out.println("Get Image from " + path);
+			URL url = new URL(path);
+			BufferedImage image = ImageIO.read(url);
+			System.out.println("Load image into frame...");
+			JLabel label = new JLabel(new ImageIcon(image));
+			JFrame f = new JFrame();
+//			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			f.getContentPane().add(label);
+			f.pack();
+			f.setLocation(200, 200);
+			f.setVisible(true);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
 	}
 }
