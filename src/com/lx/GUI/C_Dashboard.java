@@ -18,13 +18,15 @@ import java.awt.event.ActionListener;
 import java.util.prefs.Preferences;
 import java.awt.event.ActionEvent;
 import java.awt.Component;
+import javax.swing.SwingConstants;
 
 public class C_Dashboard {
 
 	private JFrame frame;
 	private JPanel mainPanel,panel,panel_1;
 	private UserBean currentUser;
-	private JLabel lblUsername;
+	private JLabel lblUsername,lblRole;
+	private JButton btnAdmin;
 	
 	public Preferences pref ;
 	
@@ -36,8 +38,19 @@ public class C_Dashboard {
 		initialize();
 		
 		String user = null;
+		String accessRole = null;
+		
+		if (pref.get("role", accessRole) != null && pref.get("role", accessRole).equalsIgnoreCase("admin")) {
+			btnAdmin.setVisible(true);
+		}else {
+			lblUsername.setBounds(920, 24, 180, 22);
+			lblRole.setBounds(1018, 45, 82, 22);
+			btnAdmin.setBounds(1047, 24, 58, 41);
+		}
+		
 		if (pref.get("uname", user) != null ) {
 			lblUsername.setText(pref.get("uname", user));
+			lblRole.setText(pref.get("role", accessRole));
 		}
 	}
 
@@ -65,6 +78,17 @@ public class C_Dashboard {
 		label_1.setBounds(53, 10, 180, 80);
 		panel.add(label_1);
 		
+		btnAdmin = new JButton("");
+		btnAdmin.setIcon(new ImageIcon(AdminUsers.class.getResource("/images/business-report.png")));
+		btnAdmin.setOpaque(false);
+		btnAdmin.setFocusable(false);
+		btnAdmin.setVisible(false);
+		btnAdmin.setContentAreaFilled(false);
+		btnAdmin.setBorder(null);
+		btnAdmin.setBackground(new Color(0, 0, 0, 0));
+		btnAdmin.setBounds(1047, 24, 58, 41);
+		panel.add(btnAdmin);
+		
 		JButton btnLogout = new JButton("");
 		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnLogout.setIcon(new ImageIcon(C_Dashboard.class.getResource("/images/on-off-button.png")));
@@ -77,9 +101,19 @@ public class C_Dashboard {
 		panel.add(btnLogout);
 		
 		lblUsername = new JLabel("");
+		lblUsername.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblUsername.setHorizontalTextPosition(SwingConstants.RIGHT);
+		lblUsername.setFont(new Font("Calibri", Font.BOLD, 19));
 		lblUsername.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		lblUsername.setBounds(951, 39, 156, 16);
+		lblUsername.setBounds(857, 24, 180, 22);
 		panel.add(lblUsername);
+		
+		lblRole = new JLabel("");
+		lblRole.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblRole.setForeground(Color.RED);
+		lblRole.setFont(new Font("Calibri Light", Font.PLAIN, 17));
+		lblRole.setBounds(954, 45, 82, 22);
+		panel.add(lblRole);
 		
 		panel_1 = new JPanel();
 		panel_1.setBackground(new Color(1, 24, 55));
@@ -156,6 +190,14 @@ public class C_Dashboard {
 //		if (currentUser !=null) {
 //			lblUsername.setText(currentUser.getUname());
 //		}
+		
+		btnAdmin.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				mainPanel.setVisible(false);
+				new Admin(frame, null);
+			}
+		});
 		
 		btnFeedbacks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

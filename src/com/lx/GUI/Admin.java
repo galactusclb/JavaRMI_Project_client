@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import com.lx.Beans.UserBean;
 
@@ -56,6 +57,23 @@ public class Admin {
 		label_1.setBackground(new Color(1,25,54));
 		label_1.setBounds(53, 10, 180, 80);
 		panel.add(label_1);
+		
+		JButton btnClient = new JButton("");
+		btnClient.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnClient.setIcon(new ImageIcon(Admin.class.getResource("/images/faq.png")));
+		btnClient.setOpaque(false);
+		btnClient.setFocusable(false);
+		btnClient.setContentAreaFilled(false);
+		btnClient.setBorder(null);
+		btnClient.setBackground(new Color(0, 0, 0, 0));
+		btnClient.setBounds(1047, 24, 58, 41);
+//		btnClient.setToolTipText("Go to client dashboard");
+		btnClient.setToolTipText("<html><div style='padding:15px 10px'>" 
+				+ "Go to the client dashbard"  
+				+ "</div></html>");
+		UIManager.put("ToolTip.background", Color.ORANGE);
+		UIManager.put("ToolTip.font", new Font("Arial", Font.BOLD, 16));
+		panel.add(btnClient);
 		
 		JButton btnLogout = new JButton("");
 		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -202,6 +220,14 @@ public class Admin {
 		lblU.setIcon(new ImageIcon(Admin.class.getResource("/images/Rectangle_2.png")));
 		lblU.setBounds(0, 5, 175, 198);
 		tileU.add(lblU);
+		
+		btnClient.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainPanel.setVisible(false);
+				new C_Dashboard(frame, null);
+			}
+		});
 		
 		btnSummary.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

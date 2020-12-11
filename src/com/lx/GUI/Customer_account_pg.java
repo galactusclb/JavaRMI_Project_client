@@ -49,6 +49,7 @@ import com.lx.Interfaces.UsersEvents_Interface;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -66,8 +67,6 @@ public class Customer_account_pg {
 	private JLabel txtEmail;
 	private JLabel txtSubmitStatus;
 	private JLabel lblPassword;
-
-	private final JPanel contentPanel = new JPanel();
 
 	public Customer_account_pg(JFrame frame) {
 		pref = Preferences.userRoot().node("cockies");
@@ -141,7 +140,9 @@ public class Customer_account_pg {
 		btnReport.setBorder(null);
 		btnReport.setBackground(new Color(0, 0, 0, 0));
 		btnReport.setBounds(277, 371, 44, 39);
-		btnReport.setVisible(false);
+		btnReport.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		panel_1.add(btnReport);
+		
 
 		JPanel popupDialog = new JPanel();
 		popupDialog.setBounds(333, 138, 511, 354);
@@ -203,15 +204,19 @@ public class Customer_account_pg {
 		panel_1.add(lblPassword);
 
 		JButton btnChange = new JButton("Change");
-		btnChange.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnChange.setBounds(287, 279, 97, 25);
+		btnChange.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnChange.setBorder(null);
+		btnChange.setFont(new Font("Calibri", Font.PLAIN, 18));
+		btnChange.setFocusable(false);
+		btnChange.setBackground(new Color(255, 186, 8));
+		btnChange.setBounds(287, 279, 97, 35);
 		panel_1.add(btnChange);
 
 		displayDetails();
 
 		btnChange.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.disable();
+//				frame.disable();
 				Passowrdchange();
 			}
 		});
@@ -311,7 +316,7 @@ public class Customer_account_pg {
 					ObjectMapper mapper = new ObjectMapper();
 //
 					feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
-					String response = feed.getclientFeedbackSummaryByClientId("chanaka");
+					String response = feed.getclientFeedbackSummaryByClientId(user);
 					System.out.println(response);
 
 					JSONObject obj = new JSONObject(response);
@@ -362,7 +367,18 @@ public class Customer_account_pg {
 
 			JSONObject jsonobj = new JSONObject(response.toString());
 
-			txtEmail.setText(jsonobj.getString("email"));
+			if (jsonobj.has("email")) {
+				txtEmail.setText(jsonobj.getString("email"));
+			} else {
+				txtEmail.setText("-");
+			}
+			
+			if (jsonobj.has("_id")) {
+				txtUserid.setText(Integer.toString(jsonobj.getInt("_id")));
+			} else {
+				txtUserid.setText("-");
+			}
+
 			txtUsername.setText(jsonobj.getString("uname"));
 
 			if (jsonobj.has("date")) {
@@ -380,13 +396,17 @@ public class Customer_account_pg {
 
 	void Passowrdchange() {
 
+		frame.setEnabled(false);
+
 		JDialog dialog = new JDialog();
 		dialog.setTitle("Change Password");
 		dialog.setResizable(false);
-		dialog.setBounds(700, 390, 450, 300);
+		dialog.setBounds(700, 390, 490, 360);
 		dialog.getContentPane().setLayout(null);
 //		contentPanel.setLayout(new FlowLayout());
-		contentPanel.setBounds(0, 0, 444, 265);
+
+		JPanel contentPanel = new JPanel();
+		contentPanel.setBounds(0, 0, 484, 325);
 		contentPanel.setBackground(new Color(1, 24, 55));
 		contentPanel.setLayout(null);
 		contentPanel.setBorder(new LineBorder(new Color(255, 186, 8), 6, true));
@@ -397,55 +417,122 @@ public class Customer_account_pg {
 
 		{
 			JLabel lblCurrentPassword = new JLabel("Current Password");
+			lblCurrentPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblCurrentPassword.setForeground(new Color(255, 186, 8));
 			lblCurrentPassword.setFont(new Font("Calibri", Font.BOLD, 19));
 			lblCurrentPassword.setBounds(30, 50, 154, 16);
 			contentPanel.add(lblCurrentPassword);
-			
+
 			JPasswordField txtCurrentPassword = new JPasswordField();
 			txtCurrentPassword.setFont(new Font("Calibri", Font.BOLD, 19));
-			txtCurrentPassword.setForeground(Color.WHITE);
-			txtCurrentPassword.setBounds(180, 42, 220, 32);
+			txtCurrentPassword.setForeground(new Color(255, 186, 8));
+			txtCurrentPassword.setBounds(210, 42, 220, 32);
 			contentPanel.add(txtCurrentPassword);
-			
+
 			JLabel lblNewPassword = new JLabel("New Password");
 			lblNewPassword.setForeground(new Color(255, 186, 8));
+			lblNewPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblNewPassword.setFont(new Font("Calibri", Font.BOLD, 19));
-			lblNewPassword.setBounds(55, 110, 154, 16);
+			lblNewPassword.setBounds(30, 110, 154, 16);
 			contentPanel.add(lblNewPassword);
-			
+
 			JPasswordField txtNewPassword = new JPasswordField();
 			txtNewPassword.setFont(new Font("Calibri", Font.BOLD, 19));
-			txtNewPassword.setForeground(Color.WHITE);
-			txtNewPassword.setBounds(180, 100, 220, 32);
+			txtNewPassword.setForeground(new Color(255, 186, 8));
+			txtNewPassword.setBounds(210, 100, 220, 32);
 			contentPanel.add(txtNewPassword);
+
+			JLabel lblConfirmPassword = new JLabel("Confirm Password");
+			lblConfirmPassword.setHorizontalAlignment(SwingConstants.RIGHT);
+			lblConfirmPassword.setForeground(new Color(255, 186, 8));
+			lblConfirmPassword.setFont(new Font("Calibri", Font.BOLD, 19));
+			lblConfirmPassword.setBounds(30, 170, 154, 16);
+			contentPanel.add(lblConfirmPassword);
+
+			JPasswordField txtConfirmPassword = new JPasswordField();
+			txtConfirmPassword.setFont(new Font("Calibri", Font.BOLD, 19));
+			txtConfirmPassword.setForeground(new Color(255, 186, 8));
+			txtConfirmPassword.setBounds(210, 158, 220, 32);
+			contentPanel.add(txtConfirmPassword);
 
 			{
 				JButton okButton = new JButton("OK");
 				okButton.setActionCommand("OK");
-				okButton.setBounds(250, 200, 80, 40);
+				okButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				okButton.setBorder(null);
+				okButton.setFont(new Font("Calibri", Font.PLAIN, 19));
+				okButton.setFocusable(false);
+				okButton.setBackground(new Color(255, 186, 8));
+				okButton.setForeground(Color.WHITE);
+				okButton.setBounds(260, 250, 80, 40);
 				contentPanel.add(okButton);
 //				dialog.getRootPane().setDefaultButton(okButton);
 
 				okButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						frame.setEnabled(true);
-						dialog.setVisible(false);
+
+						try {
+
+							String oldpassword = null;
+							String currentpassword = txtCurrentPassword.getText();
+
+							if (!currentpassword.isEmpty()
+									&& currentpassword.equals(pref.get("password", oldpassword))) {
+								if (!txtNewPassword.getText().isEmpty()
+										&& txtNewPassword.getText().equals(txtConfirmPassword.getText())) {
+									System.out.println(" same");
+
+									UsersEvents_Interface ui = (UsersEvents_Interface) Naming
+											.lookup("rmi://localhost/UserEvents");
+									String response = ui.updatePassword(user, txtNewPassword.getText());
+									System.out.println(response);
+									
+									JSONObject obj =new JSONObject(response);
+									
+									if (obj.has("message") && obj.get("message").equals("success")) {
+										frame.setEnabled(true);
+										dialog.dispose();
+										JOptionPane.showMessageDialog(frame, "password changed successful");	
+									}else {
+										JOptionPane.showMessageDialog(frame, "password error");
+									}
+									
+
+								} else {
+									System.out.println("not same");
+									JOptionPane.showMessageDialog(frame, "new password is empty.");
+								}
+
+							} else {
+								System.out.println("emp");
+								JOptionPane.showMessageDialog(frame, "current password is empty.");
+							}
+
+						} catch (Exception e2) {
+							e2.printStackTrace();
+						}
 					}
 				});
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.setActionCommand("Cancel");
-				cancelButton.setBounds(340, 200, 80, 40);
+				cancelButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+				cancelButton.setBorder(null);
+				cancelButton.setFont(new Font("Calibri", Font.PLAIN, 19));
+				cancelButton.setFocusable(false);
+				cancelButton.setBackground(new Color(230,55,12));
+				cancelButton.setForeground(Color.WHITE);
+				cancelButton.setBounds(350, 250, 80, 40);
 				contentPanel.add(cancelButton);
 
 				cancelButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						frame.setEnabled(true);
-						dialog.setVisible(false);
+//						dialog.setVisible(false);
+						dialog.dispose();
 					}
 				});
 			}

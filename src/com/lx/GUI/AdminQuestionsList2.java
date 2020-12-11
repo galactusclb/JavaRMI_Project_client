@@ -28,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -129,6 +130,11 @@ public class AdminQuestionsList2 {
 		btnAdd.setBackground(new Color(0,0,0,0));
 //		btnAdd.setFont(new Font("Calibri", Font.PLAIN, 22));
 		btnAdd.setBounds(1083, 115, 52, 45);
+		btnAdd.setToolTipText("<html><div style='padding:15px 10px'>" 
+				+ "Add new question"  
+				+ "</div></html>");
+		UIManager.put("ToolTip.background", Color.ORANGE);
+		UIManager.put("ToolTip.font", new Font("Arial", Font.BOLD, 16));
 		panel_1.add(btnAdd);
 
 		JButton btnBack = new JButton("Back");
@@ -169,6 +175,11 @@ public class AdminQuestionsList2 {
 		btnReport.setFocusable(false);
 		btnReport.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/profit-report.png")));
 		btnReport.setBounds(1027, 118, 44, 39);
+		btnReport.setToolTipText("<html><div style='padding:15px 10px'>" 
+				+ "Generate report"  
+				+ "</div></html>");
+		UIManager.put("ToolTip.background", Color.ORANGE);
+		UIManager.put("ToolTip.font", new Font("Arial", Font.BOLD, 16));
 		panel_1.add(btnReport);
 
 		JButton btnReload = new JButton("");
@@ -256,7 +267,7 @@ public class AdminQuestionsList2 {
 					para = new Paragraph(" ");
 					document.add(para);
 
-					PdfPTable ptable = new PdfPTable(4);
+					PdfPTable ptable = new PdfPTable(3);
 
 					// add table header
 					PdfPCell c1 = new PdfPCell(new Phrase("Question"));
