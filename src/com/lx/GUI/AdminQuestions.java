@@ -2,6 +2,7 @@ package com.lx.GUI;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Optional;
 
 import javax.swing.ButtonGroup;
@@ -29,10 +31,15 @@ import com.lx.Interfaces.FeedBackI;
 import javax.swing.JRadioButton;
 import java.awt.Font;
 import javax.swing.JTextArea;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import java.awt.Rectangle;
+import javax.swing.SwingConstants;
 
 public class AdminQuestions {
 
 	private JFrame frame;
+	private JPanel orderNUmbers;
 	private JTextArea txtQuestion, txtAnswers;
 	private JTextField txtAddQuestions;
 	private ButtonGroup radion_qType_group;
@@ -70,12 +77,15 @@ public class AdminQuestions {
 				} else {
 					rdbtn_radio.setSelected(true);
 				}
+				
+				getCurrentOrder(true) ;
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		} else {
+			getCurrentOrder(false) ;
 			btnDelete.setVisible(false);
 
 		}
@@ -129,6 +139,7 @@ public class AdminQuestions {
 		panel_1.add(txtAnswers);
 
 		rdbtn_radio = new JRadioButton("Radio");
+		rdbtn_radio.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		rdbtn_radio.setActionCommand("radio");
 		rdbtn_radio.setOpaque(false);
 		rdbtn_radio.setFont(new Font("Cambria", Font.PLAIN, 18));
@@ -140,6 +151,7 @@ public class AdminQuestions {
 		panel_1.add(rdbtn_radio);
 
 		rdbtn_txtArea = new JRadioButton("Text Area");
+		rdbtn_txtArea.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		rdbtn_txtArea.setActionCommand("textArea");
 		rdbtn_txtArea.setOpaque(false);
 		rdbtn_txtArea.setFont(new Font("Cambria", Font.PLAIN, 18));
@@ -151,6 +163,7 @@ public class AdminQuestions {
 		panel_1.add(rdbtn_txtArea);
 
 		rdbtn_checkBox = new JRadioButton("Check Box");
+		rdbtn_checkBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		rdbtn_checkBox.setActionCommand("checkBox");
 		rdbtn_checkBox.setOpaque(false);
 		rdbtn_checkBox.setFont(new Font("Cambria", Font.PLAIN, 18));
@@ -174,13 +187,29 @@ public class AdminQuestions {
 		txtAddQuestions.setBounds(429, 41, 154, 37);
 		panel_1.add(txtAddQuestions);
 		txtAddQuestions.setColumns(10);
+		
+		JLabel lblOrder = new JLabel("Order");
+		lblOrder.setForeground(Color.WHITE);
+		lblOrder.setBounds(214, 271, 46, 14);
+		panel_1.add(lblOrder);
 
 		txtOrder = new JTextField();
+		txtOrder.setHorizontalAlignment(SwingConstants.CENTER);
 		txtOrder.setBounds(301, 267, 119, 22);
+		txtOrder.setEditable(false);
+		txtOrder.setDisabledTextColor(Color.BLACK);
 		panel_1.add(txtOrder);
 		txtOrder.setColumns(10);
-
+		
+		orderNUmbers = new JPanel();
+		orderNUmbers.setBackground(new Color(0,0,0,0));
+		orderNUmbers.setBounds(304, 480, 550, 25);
+		panel_1.add(orderNUmbers);
+		orderNUmbers.setLayout(new BoxLayout(orderNUmbers, BoxLayout.X_AXIS));
+		
+		
 		btnCancel = new JButton("");
+		btnCancel.setIcon(new ImageIcon(AdminQuestions.class.getResource("/images/Rectangle_3_edit.png")));
 		btnCancel.setBackground(new Color(0, 0, 0, 0));
 		btnCancel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		btnCancel.setOpaque(false);
@@ -191,6 +220,7 @@ public class AdminQuestions {
 		panel_1.add(btnCancel);
 
 		btnSave = new JButton("");
+		btnSave.setIcon(new ImageIcon(AdminQuestions.class.getResource("/images/Rectangle 11_edit.png")));
 		btnSave.setBackground(new Color(0, 0, 0, 0));
 		btnSave.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		btnSave.setOpaque(false);
@@ -210,39 +240,42 @@ public class AdminQuestions {
 		btnDelete.setIcon(new ImageIcon(AdminQuestions.class.getResource("/images/delete.png")));
 		btnDelete.setBounds(574, 532, 53, 43);
 		panel_1.add(btnDelete);
+		
+		
 
 		JLabel label = new JLabel("");
+		label.setVisible(false);
 		label.setIcon(new ImageIcon(AdminQuestions.class.getResource("/images/qa.jpg")));
 		label.setBounds(0, 49, 1188, 573);
 		panel_1.add(label);
 
-//		rdbtn_radio.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				rdbtn_txtArea.setSelected(false);
-//				rdbtn_radio.setSelected(true);
-//				rdbtn_checkBox.setSelected(false);
-//			}
-//		});
-//		rdbtn_txtArea.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				rdbtn_txtArea.setSelected(true);
-//				rdbtn_radio.setSelected(false);
-//				rdbtn_checkBox.setSelected(false);
-//			}
-//		});
-//		rdbtn_checkBox.addActionListener(new ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				rdbtn_txtArea.setSelected(false);
-//				rdbtn_radio.setSelected(false);
-//				rdbtn_checkBox.setSelected(true);
-//			}
-//		});
+		rdbtn_radio.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!txtAnswers.isVisible()) {
+					txtAnswers.setVisible(true);					
+				}
+			}
+		});
+		
+		rdbtn_checkBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (!txtAnswers.isVisible()) {
+					txtAnswers.setVisible(true);					
+				}
+			}
+		});
+		
+		rdbtn_txtArea.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (txtAnswers.isVisible()) {
+					txtAnswers.setText("");
+					txtAnswers.setVisible(false);
+				}
+			}
+		});
 
 		btnCancel.addActionListener(new ActionListener() {
 
@@ -333,5 +366,61 @@ public class AdminQuestions {
 				}
 			}
 		});
+	}
+	
+	
+	void getCurrentOrder(boolean isEdit) {
+		Integer[] numb = new Integer[16];
+
+		try {
+			
+			FeedBackI feed2 = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
+			
+			List<Integer> order = feed2.getFeedbacksOrderNumbers();
+			
+			for (int i = 0; i < 16; i++) {
+				if ( !order.contains(i)) {
+					numb[i] = i;
+				} 
+			}
+			
+			
+			boolean minNUm = false;
+			for (int i = 1; i < numb.length; i++) {
+				
+				if (numb[i] !=null) {
+					JButton ordersNumb = new JButton(numb[i].toString());
+					ordersNumb.setBackground(Color.WHITE);
+					ordersNumb.setForeground(Color.BLACK);
+					ordersNumb.setHorizontalAlignment(SwingConstants.CENTER);
+					ordersNumb.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+					ordersNumb.setFocusable(false);
+					
+					ordersNumb.setPreferredSize(new Dimension(40, 25));
+					ordersNumb.setMaximumSize(new Dimension(40, 25)); 
+			        
+					ordersNumb.setBorder(null);
+					orderNUmbers.add(ordersNumb);
+					orderNUmbers.add(Box.createRigidArea(new Dimension(10, 0)));
+					
+					if (!isEdit && minNUm == false) {
+						txtOrder.setText(numb[i].toString());	
+						minNUm = true;
+					}
+					
+					int j = i;
+					ordersNumb.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							txtOrder.setText(Integer.toString(j));
+						}
+					});
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

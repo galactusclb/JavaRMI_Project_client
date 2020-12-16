@@ -506,7 +506,7 @@ public class Customer_account_pg {
 
 							} else {
 								System.out.println("emp");
-								JOptionPane.showMessageDialog(frame, "current password is empty.");
+								JOptionPane.showMessageDialog(frame, "current password is not match.");
 							}
 
 						} catch (Exception e2) {

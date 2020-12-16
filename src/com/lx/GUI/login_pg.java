@@ -47,9 +47,9 @@ public class login_pg {
 
 	public Preferences pref;
 
-	/**
-	 * Create the application.
-	 */
+	public final static Cursor busyCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+	public final static Cursor defaultCursor = Cursor.getDefaultCursor();
+
 	public login_pg(JFrame frame) {
 		pref = Preferences.userRoot().node("cockies");
 
@@ -132,7 +132,11 @@ public class login_pg {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+
+				frame.setCursor(busyCursor);
+				btnLogin.setCursor(busyCursor);
+				btnLogin.setEnabled(false);
+
 				String username = txtuname.getText();
 				String password = txtpass.getText();
 
@@ -154,6 +158,10 @@ public class login_pg {
 //					role = user.Login(username, password);
 
 					resulte = user.LoginUsersApi(username, password);
+
+					frame.setCursor(defaultCursor);
+					btnLogin.setCursor(defaultCursor);
+					btnLogin.setEnabled(true);
 
 					System.out.println("logged role : " + resulte);
 
@@ -182,7 +190,7 @@ public class login_pg {
 						} else {
 							JOptionPane.showMessageDialog(frame, "Invalid username or password");
 						}
-					}else {
+					} else {
 						JOptionPane.showMessageDialog(frame, "Invalid username or password");
 					}
 

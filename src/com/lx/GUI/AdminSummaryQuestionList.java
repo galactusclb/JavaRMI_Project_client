@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,6 +23,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
@@ -38,6 +43,7 @@ import org.json.JSONObject;
 
 import com.lx.Beans.FeedBackBean;
 import com.lx.Interfaces.FeedBackI;
+import javax.swing.JRadioButton;
 
 public class AdminSummaryQuestionList {
 
@@ -46,6 +52,10 @@ public class AdminSummaryQuestionList {
 	private JTextField txtAddQuestions;
 	private JButton btnBack;
 
+	public final static Cursor busyCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+	public final static Cursor defaultCursor = Cursor.getDefaultCursor();
+	
+	
 	public AdminSummaryQuestionList(JFrame frame) {
 		this.frame = frame;
 		initialize();
@@ -209,7 +219,32 @@ public class AdminSummaryQuestionList {
 			if (i == 2)
 				column.setMaxWidth(100);
 		}
+		
+		JRadioButton radioChartPie = new JRadioButton("Pie Chart");
+		radioChartPie.setOpaque(false);
+		radioChartPie.setFocusable(false);
+		radioChartPie.setBackground(new Color(0,0,0,0));
+		radioChartPie.setFont(new Font("Calibri", Font.PLAIN, 14));
+		radioChartPie.setForeground(Color.WHITE);
+		radioChartPie.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		radioChartPie.setBounds(58, 98, 109, 23);
+		radioChartPie.setSelected(true);
+		panel_1.add(radioChartPie);
+		
+		JRadioButton radioChartBar = new JRadioButton("Bar Chart");
+		radioChartBar.setOpaque(false);
+		radioChartBar.setFocusable(false);
+		radioChartBar.setBackground(new Color(0,0,0,0));
+		radioChartBar.setFont(new Font("Calibri", Font.PLAIN, 14));
+		radioChartBar.setForeground(Color.WHITE);
+		radioChartBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		radioChartBar.setBounds(182, 98, 109, 23);
+		panel_1.add(radioChartBar);
 
+		ButtonGroup bg = new ButtonGroup();
+		bg.add(radioChartPie);
+		bg.add(radioChartBar);
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(58, 141, 1106, 400);
 		scrollPane.setViewportView(jt);
@@ -220,96 +255,116 @@ public class AdminSummaryQuestionList {
 		jt.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent event) {
+				System.out.println("xd");
 
 				if (!event.getValueIsAdjusting()) {
+					
+					frame.setCursor(busyCursor);
+					jt.setEnabled(false);
+					
+					
 					int selectedData = 0;
-
+					String selectedQuestion = null;
 					int selectedRow = jt.getSelectedRow();
 //		    	    int selectedColumns = jt.getSelectedColumn();
 
 					for (int i = 0; i <= selectedRow; i++) {
 						for (int j = 0; j < 1; j++) {
 							selectedData = (int) jt.getValueAt(selectedRow, 0);
+							selectedQuestion = (String) jt.getValueAt(selectedRow, 3);
 						}
 					}
 //		    	    System.out.println("Selected: " + Integer.toString(selectedData));
 
 //					displayPieChart(selectedData);
 //					chartImgPieChart() ;
-					displayChartConfiger(selectedData, null);
+					
+					if (radioChartPie.isSelected()) {
+						displayChartConfiger(selectedData, "pie",selectedQuestion);						
+					}else {
+						displayChartConfiger(selectedData, "bar",selectedQuestion);
+					}
+					
+					frame.setCursor(defaultCursor);
+					jt.setEnabled(true);
 				}
 			}
 		});
 	}
 
-	public void displayChartConfiger(int qid, String type) {
+	public void displayChartConfiger(int qid, String type,String selectedQuestion) {
 		FeedBackI feed = null;
 
 		try {
 			feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
 			String response = feed.getclientFeedbackSummaryByQid(qid);
 
-			System.out.println(response);
-			chartImgPieChart(response);
+//			System.out.println(response);
+			
+			if (type.equalsIgnoreCase("pie")) {
+				chartImgPieChart(response,selectedQuestion);				
+			}else {
+				chartImgBarChart(response,selectedQuestion);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void displayPieChart(int qid) {
-		DefaultPieDataset pieDataSet = new DefaultPieDataset();
+//	public void displayPieChart(int qid) {
+//		DefaultPieDataset pieDataSet = new DefaultPieDataset();
+//
+//		ObjectMapper mapper = new ObjectMapper();
+//		FeedBackI feed = null;
+////		Summary_answerCountBean[] model = null;
+//
+//		try {
+//			feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
+//			String response = feed.getclientFeedbackSummaryByQid(qid);
+////			model = mapper.readValue(response, FeedBackBean[].class);
+//
+//			// for read map-like jason without using model structure
+//			Map<String, Object> map = mapper.readValue(response, new TypeReference<Map<String, Object>>() {
+//			});
+//
+////			System.out.println(map.get("answersCount"));
+////			String answerCountList = map.get("answersCount").toString();
+////			System.out.println(answerCountList);
+//
+//			List ansContList = (List) map.get("answersCount");
+//
+////			System.out.println(((Map)ansContList.get(0)).get("answer"));
+//
+//			for (int i = 0; i < ansContList.size(); i++) {
+//				String labelName = (String) ((Map) ansContList.get(i)).get("answer");
+//				int summaryCount = (int) ((Map) ansContList.get(i)).get("count");
+//				pieDataSet.setValue(labelName, summaryCount);
+//			}
+//
+////			model = mapper.readValue(answerCountList, Summary_answerCountBean[].class);
+//
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
+//		}
+//
+////		pieDataSet.setValue("one", new Integer(20));
+////		pieDataSet.setValue("Two", new Integer(30));
+////		pieDataSet.setValue("Three", new Integer(50));
+//
+//		JFreeChart chart = ChartFactory.createPieChart("Pie chart " + qid, pieDataSet, true, true, true);
+//		PiePlot p = (PiePlot) chart.getPlot();
+////		p.setForegroundAlpha(TOP_ALIGNMENT);
+//		chart.getPlot().setBackgroundPaint(Color.WHITE);
+//		chart.setBorderVisible(false);
+//		ChartFrame frame = new ChartFrame("Pie Chart", chart);
+//
+//		frame.setVisible(true);
+////		frame.setSize(450,500);
+//		frame.setBounds(600, 200, 600, 600);
+//	}
 
-		ObjectMapper mapper = new ObjectMapper();
-		FeedBackI feed = null;
-//		Summary_answerCountBean[] model = null;
-
-		try {
-			feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
-			String response = feed.getclientFeedbackSummaryByQid(qid);
-//			model = mapper.readValue(response, FeedBackBean[].class);
-
-			// for read map-like jason without using model structure
-			Map<String, Object> map = mapper.readValue(response, new TypeReference<Map<String, Object>>() {
-			});
-
-//			System.out.println(map.get("answersCount"));
-//			String answerCountList = map.get("answersCount").toString();
-//			System.out.println(answerCountList);
-
-			List ansContList = (List) map.get("answersCount");
-
-//			System.out.println(((Map)ansContList.get(0)).get("answer"));
-
-			for (int i = 0; i < ansContList.size(); i++) {
-				String labelName = (String) ((Map) ansContList.get(i)).get("answer");
-				int summaryCount = (int) ((Map) ansContList.get(i)).get("count");
-				pieDataSet.setValue(labelName, summaryCount);
-			}
-
-//			model = mapper.readValue(answerCountList, Summary_answerCountBean[].class);
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-
-//		pieDataSet.setValue("one", new Integer(20));
-//		pieDataSet.setValue("Two", new Integer(30));
-//		pieDataSet.setValue("Three", new Integer(50));
-
-		JFreeChart chart = ChartFactory.createPieChart("Pie chart " + qid, pieDataSet, true, true, true);
-		PiePlot p = (PiePlot) chart.getPlot();
-//		p.setForegroundAlpha(TOP_ALIGNMENT);
-		chart.getPlot().setBackgroundPaint(Color.WHITE);
-		chart.setBorderVisible(false);
-		ChartFrame frame = new ChartFrame("Pie Chart", chart);
-
-		frame.setVisible(true);
-//		frame.setSize(450,500);
-		frame.setBounds(600, 200, 600, 600);
-	}
-
-	public void chartImgPieChart(String json) {
+	public void chartImgPieChart(String json,String selectedQuestion) {
 		ObjectMapper mapper = new ObjectMapper();
 
 		try {
@@ -358,7 +413,7 @@ public class AdminSummaryQuestionList {
 			System.out.println(strAnswersCount);
 
 			totalCount = (int) map.get("questionsCount");
-			String title = "GG";
+//			String title = "GG";
 			
 			
 //			JSONObject subObj = new JSONObject();
@@ -380,7 +435,8 @@ public class AdminSummaryQuestionList {
 //					+ "&chf=b0%2Clg%2C90%2C68cefd%2C0%2C96a6ff%2C1"
 					+ "&chl=" + strAnswersCount
 					+ "&chli=" + totalCount
-					+ "&chma=0%2C0%2C20%2C40&chs=700x600&cht=pd&chtt=" + title;
+					+ "&chma=0%2C0%2C60%2C40&chs=700x600&cht=pd";
+//					+ "&chtt=" + title;
 //					+ "&dataLabels="+(URLEncoder.encode(subObj.toString(), "UTF-8"));
 			
 //			String path = "https://image-charts.com/chart?" 
@@ -398,16 +454,119 @@ public class AdminSummaryQuestionList {
 //					+ typeCount3 + "%7C" + typeCount4 + "&chli=" + totalCount
 //					+ "%E2%82%AC&chma=0%2C0%2C20%2C20&chs=700x600&cht=pd&chtt=" + title;
 
+			JFrame f = new JFrame();
+			
+			JLabel lblQuestion = new JLabel(selectedQuestion);
+			lblQuestion.setHorizontalAlignment(SwingConstants.CENTER);
+			lblQuestion.setBounds(0, 0, 700, 50);
+			lblQuestion.setFont(new Font("Calibri", Font.BOLD, 19));
+			Border border = lblQuestion.getBorder();
+			Border margin = new EmptyBorder(50, 10, 80, 10);
+			lblQuestion.setBorder(new CompoundBorder(border, margin));
+			f.getContentPane().add(lblQuestion);
+			
 			System.out.println("Get Image from " + path);
 			URL url = new URL(path);
 			BufferedImage image = ImageIO.read(url);
 			System.out.println("Load image into frame...");
 			JLabel label = new JLabel(new ImageIcon(image));
-			JFrame f = new JFrame();
+			
 //			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			f.getContentPane().add(label);
 			f.pack();
-			f.setLocation(200, 200);
+			f.setLocation(550, 250);
+			f.setVisible(true);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
+	}
+
+	public void chartImgBarChart(String json,String selectedQuestion) {
+		ObjectMapper mapper = new ObjectMapper();
+
+		try {
+			
+			System.out.println("ques :"+selectedQuestion);
+			
+			Integer[] angle ;
+			String[] answers;
+			int totalCount ;
+			
+			Map<String, Object> map = mapper.readValue(json, new TypeReference<Map<String, Object>>() {
+			});
+
+			List ansContList = (List) map.get("answersCount");
+			
+			System.out.println(ansContList.size());
+			angle = new Integer[ansContList.size()];
+			answers = new String[ansContList.size()];
+			
+			for (int i = 0; i < ansContList.size(); i++) {
+				angle[i] = (Integer) ((Map) ansContList.get(i)).get("count");
+				answers[i] = (String) ((Map) ansContList.get(i)).get("answer");
+			}
+			
+			StringBuilder builder = new StringBuilder();//for angle 
+			StringBuilder builderAnswer = new StringBuilder();//for answers title
+			StringBuilder builderAnswerCount = new StringBuilder();//for display answers count
+			
+			for (int j = 0; j < answers.length; j++) {				
+				Integer x = (Integer) ((angle[j]*100)/7);
+				
+					builder.append(x);	
+					builderAnswer.append(answers[j]);
+					
+//					if (angle[j]>0) {
+						builderAnswerCount.append(angle[j]);						
+//					}
+					
+					if (j != answers.length-1) {
+						builder.append(",");
+						builderAnswer.append("|");
+//						builderAnswerCount.append("|");
+						builderAnswerCount.append(",");
+					} 
+			}
+			
+			String strAngles = builder.toString(); //chd
+			
+			String strAnswersTitle = builderAnswer.toString().replaceAll("\\s+","");//chxl 
+			System.out.println(strAnswersTitle);
+			String strAnswersCount = builderAnswerCount.toString();
+			System.out.println(strAnswersCount);
+
+			totalCount = (int) map.get("questionsCount");
+			
+			String bar = "https://image-charts.com/chart?"
+					+ "chbr=10"
+					+ "&chco=EA469E%7C03A9F4%7CFFC00C%7CFFFF10%7CFF2027"
+					+ "&chd=t:"+strAnswersCount
+					+ "&chs=700x500"
+					+ "&cht=bvs"
+					+ "&chxl=1:|"+strAnswersTitle
+					+ "&chma=40%2C60%2C40%2C40&chxt=y%2Cx";
+
+			JFrame f = new JFrame();
+			
+			JLabel lblQuestion = new JLabel(selectedQuestion);
+			lblQuestion.setHorizontalAlignment(SwingConstants.CENTER);
+			lblQuestion.setBounds(0, 0, 700, 50);
+			lblQuestion.setFont(new Font("Calibri", Font.BOLD, 19));
+			Border border = lblQuestion.getBorder();
+			Border margin = new EmptyBorder(50, 10, 80, 10);
+			lblQuestion.setBorder(new CompoundBorder(border, margin));
+			f.getContentPane().add(lblQuestion);
+			
+			System.out.println("Get Image from " + bar);
+			URL url = new URL(bar);
+			BufferedImage image = ImageIO.read(url);
+			System.out.println("Load image into frame...");
+			JLabel label = new JLabel(new ImageIcon(image));
+			
+			
+			f.getContentPane().add(label);
+			f.pack();
+			f.setLocation(550, 250);
 			f.setVisible(true);
 		} catch (Exception exp) {
 			exp.printStackTrace();

@@ -2,7 +2,6 @@ package com.lx.GUI;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,24 +21,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.lx.Beans.ClientFeedbackBean;
 import com.lx.Beans.FeedBackBean;
+import com.lx.ExtraPages.PdfFooter;
 import com.lx.Interfaces.FeedBackI;
 import com.lx.Interfaces.UsersEvents_Interface;
 
@@ -48,9 +43,11 @@ public class AdminUsers {
 	private JFrame frame;
 	private JPanel mainPanel, panel, panel_1;
 	private JTextField textSearch;
+	
+	public final static Cursor busyCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+	public final static Cursor defaultCursor = Cursor.getDefaultCursor();
 
 	private String searchedUser = null;
-
 	public AdminUsers(JFrame frame) {
 		this.frame = frame;
 		initialize();
@@ -179,6 +176,7 @@ public class AdminUsers {
 		btnReport.setFocusable(false);
 		btnReport.setIcon(new ImageIcon(AdminQuestionsList2.class.getResource("/images/profit-report.png")));
 		btnReport.setBounds(831, 95, 44, 39);
+		btnReport.setVisible(false);
 		panel_2.add(btnReport);
 
 		JLabel label = new JLabel("");
@@ -228,39 +226,68 @@ public class AdminUsers {
 			public void actionPerformed(ActionEvent arg0) {
 
 				try {
+					
+					frame.setCursor(busyCursor);
+					btnSearch.setCursor(busyCursor);
+					btnSearch.setEnabled(false);
+					
+					
 					panel_2.setVisible(false);
 					panel_3.setVisible(true);
 
 					UsersEvents_Interface user = (UsersEvents_Interface) Naming.lookup("rmi://localhost/UserEvents");
 
-					String jString = user.getUsers();
+					String jString = user.getUserDetails(textSearch.getText().toString());
 
-					JSONArray jArray = (JSONArray) new JSONTokener(jString.toString()).nextValue();
+					frame.setCursor(defaultCursor);
+					btnSearch.setCursor(defaultCursor);
+					btnSearch.setEnabled(true);
 
-					boolean x = true;
-					for (int i = 0; i < jArray.length(); i++) {
-						JSONObject jObject = jArray.getJSONObject(i);
+					System.out.println(jString);
+					
+//					JSONArray jArray = (JSONArray) new JSONTokener(jString.toString()).nextValue();
 
-//						System.out.println(jObject.getString("userID") + " " + jObject.getString("uName") + " "
-//								+ jObject.getString("role"));
+					JSONObject jobj = new JSONObject(jString);
+					
+					if (!jobj.isNull("uname")) {
+						panel_2.setVisible(true);
+						panel_3.setVisible(false);
 
-						if (textSearch.getText().equalsIgnoreCase(jObject.getString("uName"))) {
-							panel_2.setVisible(true);
-							panel_3.setVisible(false);
-
-							lblUserNameDetails.setText(jObject.getString("uName"));
-							lblUIDDetails.setText(jObject.getString("userID"));
-
-							x = false;
+						lblUserNameDetails.setText(jobj.getString("uname"));
+						lblUIDDetails.setText(Integer.toString(jobj.getInt("_id")));
+						
+						if (!jobj.isNull("date")) {
+							btnReport.setVisible(true);
+						} else {
+							btnReport.setVisible(false);
 						}
-//						else if( i == (jArray.length() -1 ) && !textSearch.getText().equalsIgnoreCase(jObject.getString("uName"))){
-//							JOptionPane.showMessageDialog(frame, "No user found!");
-//						}
-					}
-
-					if (x) {
+					} else {
 						JOptionPane.showMessageDialog(frame, "No user found!");
 					}
+//					boolean x = true;
+//					for (int i = 0; i < jArray.length(); i++) {
+//						JSONObject jObject = jArray.getJSONObject(i);
+//
+////						System.out.println(jObject.getString("userID") + " " + jObject.getString("uName") + " "
+////								+ jObject.getString("role"));
+//
+//						if (textSearch.getText().equalsIgnoreCase(jObject.getString("uName"))) {
+//							panel_2.setVisible(true);
+//							panel_3.setVisible(false);
+//
+//							lblUserNameDetails.setText(jObject.getString("uName"));
+//							lblUIDDetails.setText(jObject.getString("userID"));
+//
+//							x = false;
+//						}
+////						else if( i == (jArray.length() -1 ) && !textSearch.getText().equalsIgnoreCase(jObject.getString("uName"))){
+////							JOptionPane.showMessageDialog(frame, "No user found!");
+////						}
+//					}
+//
+//					if (x) {
+//						JOptionPane.showMessageDialog(frame, "No user found!");
+//					}
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -290,43 +317,46 @@ public class AdminUsers {
 				Font footerN = new Font(FontFactory.TIMES_ROMAN,18, Font.BOLD);
 
 				String fileName = currentPath + "\\outputs\\userReport\\GL_Feedback_UserReport_" + timeStamp + ".pdf";
-				Document document = new Document(PageSize.A4, 36, 36, 36, 72);
+				Document document = new Document(PageSize.A4, 36, 36, 36, 52);
 				
 				document.addCreationDate();
 				document.addAuthor("Chanaka Laksha");
 				document.addCreator("Grandluck.com");
 				
-				PdfPTable tableFooter = new PdfPTable(1);
-				tableFooter.setTotalWidth(700);
-				
-				PdfPCell footerName = new PdfPCell(new Phrase("LOGICCHIP"));
-				PdfPCell footerEmail = new PdfPCell(new Phrase("info@logicchip.com"));
-
-				PdfPCell footerEmpty = new PdfPCell(new Phrase(""));
-				
-				footerName.setBorder(Rectangle.NO_BORDER);
-				footerEmpty.setBorder(Rectangle.NO_BORDER);
-				footerEmail.setBorder(Rectangle.NO_BORDER);
-				
-				PdfPCell preBorderBlue = new PdfPCell(new Phrase(""));
-				preBorderBlue.setMinimumHeight(5f);
-				preBorderBlue.setUseVariableBorders(true);
-				preBorderBlue.setBorderColorTop(new BaseColor(new Color(255,185,6)));
-				preBorderBlue.setBorderWidthTop(3);
-				
-				tableFooter.addCell(preBorderBlue);
-				tableFooter.addCell(footerName);
-				tableFooter.addCell(footerEmail);
+//				PdfPTable tableFooter = new PdfPTable(1);
+//				tableFooter.setTotalWidth(700);
+//				
+//				PdfPCell footerName = new PdfPCell(new Phrase("LOGICCHIP"));
+//				PdfPCell footerEmail = new PdfPCell(new Phrase("info@logicchip.com"));
+//
+//				PdfPCell footerEmpty = new PdfPCell(new Phrase(""));
+//				
+//				footerName.setBorder(Rectangle.NO_BORDER);
+//				footerEmpty.setBorder(Rectangle.NO_BORDER);
+//				footerEmail.setBorder(Rectangle.NO_BORDER);
+//				
+//				PdfPCell preBorderBlue = new PdfPCell(new Phrase(""));
+//				preBorderBlue.setMinimumHeight(5f);
+//				preBorderBlue.setUseVariableBorders(true);
+//				preBorderBlue.setBorderColorTop(new BaseColor(new Color(255,185,6)));
+//				preBorderBlue.setBorderWidthTop(3);
+//				
+//				tableFooter.addCell(preBorderBlue);
+//				tableFooter.addCell(footerName);
+//				tableFooter.addCell(footerEmail);
 
 				
 				try {
-					PdfWriter.getInstance(document, new FileOutputStream(fileName));
+					PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
 					document.open();
 
+					writer.setPageEvent( new PdfFooter());
 //					Paragraph para = new Paragraph("Test GL_Feedback_QA_"+timeStamp+".pdf");
 //					document.add(para);
 
-					Paragraph para = new Paragraph(lblUserNameDetails.getText().toString());
+					document.add(Image.getInstance(currentPath+"\\src\\images\\graduation-hat.png"));
+					
+					Paragraph para = new Paragraph(lblUserNameDetails.getText());
 					para.setSpacingAfter(35);
 					para.setAlignment(Element.ALIGN_CENTER);
 					document.add(para);
@@ -350,7 +380,7 @@ public class AdminUsers {
 					ObjectMapper mapper = new ObjectMapper();
 //
 					feed = (FeedBackI) Naming.lookup("rmi://localhost/Feedbacks");
-					String response = feed.getclientFeedbackSummaryByClientId("chanaka");
+					String response = feed.getclientFeedbackSummaryByClientId(lblUserNameDetails.getText());
 					System.out.println(response);
 					
 					JSONObject obj =new JSONObject(response);
@@ -361,11 +391,11 @@ public class AdminUsers {
 					for (FeedBackBean feedBackBean : model) {
 //						System.out.println(feedBackBean.getQuestion() + " : " + feedBackBean.getSelectedAnswer());
 
-//						for (int j = 0; j < 3; j++) {
+						for (int j = 0; j < 5; j++) {
 							ptable.addCell(Integer.toString(feedBackBean.get_id()));
 							ptable.addCell(feedBackBean.getQuestion());
 							ptable.addCell(feedBackBean.getSelectedAnswer());
-//						}
+						}
 					}
 					
 					
@@ -376,7 +406,8 @@ public class AdminUsers {
 					para.setSpacingAfter(35);
 					document.add(para);
 					
-					document.add(tableFooter);
+//					document.add(tableFooter);
+					
 					
 					document.close();
 

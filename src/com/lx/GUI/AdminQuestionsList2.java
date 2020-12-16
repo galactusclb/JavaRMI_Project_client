@@ -439,6 +439,7 @@ public class AdminQuestionsList2 {
 					for (int i = 0; i <= selectedRow; i++) {
 						for (int j = 0; j < 1; j++) {
 							selectedData = (int) jt.getValueAt(selectedRow, 0);
+							System.out.println(selectedData);
 						}
 					}
 //		    	    System.out.println("Selected: " + Integer.toString(selectedData));

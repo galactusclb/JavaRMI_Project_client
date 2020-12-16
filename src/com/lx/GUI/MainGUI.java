@@ -49,8 +49,8 @@ public class MainGUI {
 //		new AdminQuestions(frame,0);
 //		new Admin(frame,null);
 //		new AdminUsers(frame);
-//		new login_pg(frame);
-		new Customer_account_pg(frame);
+		new login_pg(frame);
+//		new Customer_account_pg(frame);
 //		new AdminSummaryQuestionList(frame);
 //		new AdminQuestionsList2(frame);
 //		new C_Dashboard(frame, null);
