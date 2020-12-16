@@ -49,6 +49,7 @@ public class AdminQuestions {
 	private FeedBackI feed;
 	private JTextField txtOrder;
 	private int editQuestionId;
+	private JLabel lblAvailable;
 
 	public AdminQuestions(JFrame frame, int qId) {
 		this.frame = frame;
@@ -120,11 +121,11 @@ public class AdminQuestions {
 		panel_1.setLayout(null);
 
 		txtQuestion = new JTextArea();
+		txtQuestion.setBackground(Color.WHITE);
 		txtQuestion.setLineWrap(true);
 		txtQuestion.setWrapStyleWord(true);
 		txtQuestion.setFont(new Font("Calibri", Font.PLAIN, 18));
 		txtQuestion.setBorder(null);
-		txtQuestion.setOpaque(false);
 		txtQuestion.setBounds(304, 122, 396, 82);
 		txtQuestion.setColumns(10);
 		panel_1.add(txtQuestion);
@@ -132,9 +133,8 @@ public class AdminQuestions {
 		txtAnswers = new JTextArea();
 		txtAnswers.setLineWrap(true);
 		txtAnswers.setBorder(null);
-		txtAnswers.setOpaque(false);
 		txtAnswers.setFont(new Font("Calibri", Font.PLAIN, 18));
-		txtAnswers.setBounds(304, 311, 396, 143);
+		txtAnswers.setBounds(304, 378, 396, 143);
 		txtAnswers.setColumns(10);
 		panel_1.add(txtAnswers);
 
@@ -189,13 +189,39 @@ public class AdminQuestions {
 		txtAddQuestions.setColumns(10);
 		
 		JLabel lblOrder = new JLabel("Order");
+		lblOrder.setFont(new Font("Calibri", Font.PLAIN, 18));
 		lblOrder.setForeground(Color.WHITE);
-		lblOrder.setBounds(214, 271, 46, 14);
+		lblOrder.setBounds(211, 274, 63, 14);
 		panel_1.add(lblOrder);
+		
+		JLabel lblQuestion = new JLabel("Question");
+		lblQuestion.setFont(new Font("Calibri", Font.PLAIN, 17));
+		lblQuestion.setForeground(Color.WHITE);
+		lblQuestion.setBounds(198, 150, 69, 14);
+		panel_1.add(lblQuestion);
+		
+		JLabel lblType = new JLabel("Type");
+		lblType.setForeground(Color.WHITE);
+		lblType.setFont(new Font("Calibri", Font.PLAIN, 19));
+		lblType.setBounds(211, 236, 53, 14);
+		panel_1.add(lblType);
+		
+		
+
+		JLabel label = new JLabel("");
+		label.setIcon(null);
+		label.setBounds(10, 41, 1188, 573);
+		panel_1.add(label);
+		
+		lblAvailable = new JLabel("available order numbers");
+		lblAvailable.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblAvailable.setForeground(Color.WHITE);
+		lblAvailable.setBounds(304, 309, 224, 14);
+		panel_1.add(lblAvailable);
 
 		txtOrder = new JTextField();
 		txtOrder.setHorizontalAlignment(SwingConstants.CENTER);
-		txtOrder.setBounds(301, 267, 119, 22);
+		txtOrder.setBounds(304, 265, 119, 33);
 		txtOrder.setEditable(false);
 		txtOrder.setDisabledTextColor(Color.BLACK);
 		panel_1.add(txtOrder);
@@ -203,7 +229,7 @@ public class AdminQuestions {
 		
 		orderNUmbers = new JPanel();
 		orderNUmbers.setBackground(new Color(0,0,0,0));
-		orderNUmbers.setBounds(304, 480, 550, 25);
+		orderNUmbers.setBounds(302, 335, 550, 25);
 		panel_1.add(orderNUmbers);
 		orderNUmbers.setLayout(new BoxLayout(orderNUmbers, BoxLayout.X_AXIS));
 		
@@ -216,7 +242,7 @@ public class AdminQuestions {
 		btnCancel.setContentAreaFilled(false);
 		btnCancel.setBorderPainted(false);
 		btnCancel.setFocusable(false);
-		btnCancel.setBounds(439, 532, 112, 43);
+		btnCancel.setBounds(439, 532, 125, 43);
 		panel_1.add(btnCancel);
 
 		btnSave = new JButton("");
@@ -227,7 +253,7 @@ public class AdminQuestions {
 		btnSave.setContentAreaFilled(false);
 		btnSave.setBorderPainted(false);
 		btnSave.setFocusable(false);
-		btnSave.setBounds(292, 532, 119, 43);
+		btnSave.setBounds(292, 532, 125, 43);
 		panel_1.add(btnSave);
 
 		btnDelete = new JButton("");
@@ -240,14 +266,6 @@ public class AdminQuestions {
 		btnDelete.setIcon(new ImageIcon(AdminQuestions.class.getResource("/images/delete.png")));
 		btnDelete.setBounds(574, 532, 53, 43);
 		panel_1.add(btnDelete);
-		
-		
-
-		JLabel label = new JLabel("");
-		label.setVisible(false);
-		label.setIcon(new ImageIcon(AdminQuestions.class.getResource("/images/qa.jpg")));
-		label.setBounds(0, 49, 1188, 573);
-		panel_1.add(label);
 
 		rdbtn_radio.addActionListener(new ActionListener() {
 			@Override
