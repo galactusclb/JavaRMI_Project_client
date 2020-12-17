@@ -35,6 +35,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import java.awt.Rectangle;
 import javax.swing.SwingConstants;
+import javax.swing.JCheckBox;
 
 public class AdminQuestions {
 
@@ -44,6 +45,7 @@ public class AdminQuestions {
 	private JTextField txtAddQuestions;
 	private ButtonGroup radion_qType_group;
 	private JButton btnSave, btnCancel, btnDelete;
+	private JCheckBox chckbxVisible;
 	private JRadioButton rdbtn_checkBox, rdbtn_txtArea, rdbtn_radio;
 
 	private FeedBackI feed;
@@ -70,6 +72,12 @@ public class AdminQuestions {
 				txtQuestion.setText(model[0].getQuestion());
 				txtAnswers.setText(model[0].getAnswers());
 				txtOrder.setText(Integer.toString(model[0].getOrder()));
+				
+				if (model[0].isStatus()) {
+					chckbxVisible.setSelected(true);
+				} else {
+					chckbxVisible.setSelected(false);
+				}
 
 				if (model[0].getType().equalsIgnoreCase("checkBox")) {
 					rdbtn_checkBox.setSelected(true);
@@ -190,34 +198,45 @@ public class AdminQuestions {
 		
 		JLabel lblOrder = new JLabel("Order");
 		lblOrder.setFont(new Font("Calibri", Font.PLAIN, 18));
-		lblOrder.setForeground(Color.WHITE);
-		lblOrder.setBounds(211, 274, 63, 14);
+		lblOrder.setForeground(Color.ORANGE);
+		lblOrder.setBounds(220, 273, 47, 14);
 		panel_1.add(lblOrder);
 		
 		JLabel lblQuestion = new JLabel("Question");
-		lblQuestion.setFont(new Font("Calibri", Font.PLAIN, 17));
-		lblQuestion.setForeground(Color.WHITE);
+		lblQuestion.setFont(new Font("Calibri", Font.PLAIN, 18));
+		lblQuestion.setForeground(Color.ORANGE);
 		lblQuestion.setBounds(198, 150, 69, 14);
 		panel_1.add(lblQuestion);
 		
 		JLabel lblType = new JLabel("Type");
-		lblType.setForeground(Color.WHITE);
-		lblType.setFont(new Font("Calibri", Font.PLAIN, 19));
-		lblType.setBounds(211, 236, 53, 14);
+		lblType.setForeground(Color.ORANGE);
+		lblType.setFont(new Font("Calibri", Font.PLAIN, 18));
+		lblType.setBounds(225, 236, 42, 14);
 		panel_1.add(lblType);
 		
-		
-
-		JLabel label = new JLabel("");
-		label.setIcon(null);
-		label.setBounds(10, 41, 1188, 573);
-		panel_1.add(label);
-		
 		lblAvailable = new JLabel("available order numbers");
-		lblAvailable.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblAvailable.setForeground(Color.WHITE);
+		lblAvailable.setFont(new Font("Calibri", Font.PLAIN, 14));
+		lblAvailable.setForeground(Color.ORANGE);
 		lblAvailable.setBounds(304, 309, 224, 14);
 		panel_1.add(lblAvailable);
+		
+		JLabel lblAnswers = new JLabel("Answers");
+		lblAnswers.setForeground(Color.ORANGE);
+		lblAnswers.setFont(new Font("Calibri", Font.PLAIN, 18));
+		lblAnswers.setBounds(198, 382, 69, 14);
+		panel_1.add(lblAnswers);
+		
+		JLabel lblAnswerDescription = new JLabel("Enter answers by \",\" separating values.");
+		lblAnswerDescription.setForeground(Color.ORANGE);
+		lblAnswerDescription.setFont(new Font("Calibri", Font.PLAIN, 14));
+		lblAnswerDescription.setBounds(722, 383, 263, 25);
+		panel_1.add(lblAnswerDescription);
+		
+		JLabel lblAnswerDescription2 = new JLabel("Ex.  Good,Bad");
+		lblAnswerDescription2.setForeground(Color.ORANGE);
+		lblAnswerDescription2.setFont(new Font("Calibri", Font.PLAIN, 14));
+		lblAnswerDescription2.setBounds(722, 407, 201, 14);
+		panel_1.add(lblAnswerDescription2);
 
 		txtOrder = new JTextField();
 		txtOrder.setHorizontalAlignment(SwingConstants.CENTER);
@@ -242,7 +261,7 @@ public class AdminQuestions {
 		btnCancel.setContentAreaFilled(false);
 		btnCancel.setBorderPainted(false);
 		btnCancel.setFocusable(false);
-		btnCancel.setBounds(439, 532, 125, 43);
+		btnCancel.setBounds(451, 638, 125, 43);
 		panel_1.add(btnCancel);
 
 		btnSave = new JButton("");
@@ -253,7 +272,7 @@ public class AdminQuestions {
 		btnSave.setContentAreaFilled(false);
 		btnSave.setBorderPainted(false);
 		btnSave.setFocusable(false);
-		btnSave.setBounds(292, 532, 125, 43);
+		btnSave.setBounds(304, 638, 125, 43);
 		panel_1.add(btnSave);
 
 		btnDelete = new JButton("");
@@ -264,14 +283,35 @@ public class AdminQuestions {
 		btnDelete.setBorderPainted(false);
 		btnDelete.setFocusable(false);
 		btnDelete.setIcon(new ImageIcon(AdminQuestions.class.getResource("/images/delete.png")));
-		btnDelete.setBounds(574, 532, 53, 43);
+		btnDelete.setBounds(586, 638, 53, 43);
 		panel_1.add(btnDelete);
+		
+		chckbxVisible = new JCheckBox("Visible");
+		chckbxVisible.setSelected(true);
+		chckbxVisible.setFocusable(false);
+		chckbxVisible.setBorder(null);
+		chckbxVisible.setOpaque(false);
+		chckbxVisible.setForeground(Color.ORANGE);
+		chckbxVisible.setFont(new Font("Calibri", Font.PLAIN, 18));
+		chckbxVisible.setBounds(304, 552, 97, 23);
+		panel_1.add(chckbxVisible);
+		
+		
+
+		JLabel label = new JLabel("");
+		label.setIcon(null);
+		label.setBounds(10, 41, 1188, 573);
+		panel_1.add(label);
 
 		rdbtn_radio.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!txtAnswers.isVisible()) {
-					txtAnswers.setVisible(true);					
+					txtAnswers.setVisible(true);	
+					lblAnswers.setVisible(true);
+					lblAnswerDescription.setVisible(true);
+					lblAnswerDescription2.setVisible(true);
+					chckbxVisible.setBounds(304, 552, 97, 23);
 				}
 			}
 		});
@@ -280,7 +320,11 @@ public class AdminQuestions {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (!txtAnswers.isVisible()) {
-					txtAnswers.setVisible(true);					
+					txtAnswers.setVisible(true);
+					lblAnswers.setVisible(true);
+					lblAnswerDescription.setVisible(true);
+					lblAnswerDescription2.setVisible(true);
+					chckbxVisible.setBounds(304, 552, 97, 23);
 				}
 			}
 		});
@@ -289,8 +333,15 @@ public class AdminQuestions {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (txtAnswers.isVisible()) {
-					txtAnswers.setText("");
+					
+					if (editQuestionId < 1) {
+						txtAnswers.setText("");						
+					}
 					txtAnswers.setVisible(false);
+					lblAnswers.setVisible(false);
+					lblAnswerDescription.setVisible(false);
+					lblAnswerDescription2.setVisible(false);
+					chckbxVisible.setBounds(304, 378, 97, 23);
 				}
 			}
 		});
@@ -346,6 +397,7 @@ public class AdminQuestions {
 					String question = txtQuestion.getText();
 					String answers = txtAnswers.getText();
 					int order = Integer.parseInt(txtOrder.getText());
+					boolean status = chckbxVisible.isSelected();
 
 					if (rdbtn_checkBox.isSelected()) {
 						type = rdbtn_checkBox.getActionCommand();
@@ -359,9 +411,9 @@ public class AdminQuestions {
 
 					String res = null;
 					if (editQuestionId > 0) { // edit question
-						res = feed.editFeedBack(editQuestionId, type, question, answers, order);
+						res = feed.editFeedBack(editQuestionId, type, question, answers, order,status);
 					} else {
-						res = feed.addFeedBack(type, question, answers, order);
+						res = feed.addFeedBack(type, question, answers, order,status);
 					}
 //					System.out.println(res);
 

@@ -1,10 +1,12 @@
-package com.lx.GUI;
+package com.lx.ExtraPages;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import com.lx.GUI.Admin;
 
 public class _Structure {
 
