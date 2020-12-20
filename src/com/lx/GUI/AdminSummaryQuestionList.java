@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -51,6 +53,7 @@ public class AdminSummaryQuestionList {
 	private JPanel mainPanel, panel, panel_1;
 	private JTextField txtAddQuestions;
 	private JButton btnBack;
+	private JTable jt;
 
 	public final static Cursor busyCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
 	public final static Cursor defaultCursor = Cursor.getDefaultCursor();
@@ -65,6 +68,8 @@ public class AdminSummaryQuestionList {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		frame.setCursor(defaultCursor);
+		
 		mainPanel = new JPanel();
 		mainPanel.setBounds(0, 0, 1200, 820);
 		mainPanel.setBackground(new Color(0, 0, 0, 0));
@@ -165,9 +170,18 @@ public class AdminSummaryQuestionList {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-//
-//
-		Object[][] data = new Object[model.length][6];
+
+
+		//get item counts excepts textArea type for below obj length
+		int itemsCount = 0;
+		for (FeedBackBean fb : model) {
+			if (!fb.getType().equalsIgnoreCase("textArea")) {
+				itemsCount++;
+			}
+		}	
+		
+		
+		Object[][] data = new Object[itemsCount][6];
 
 		int k = 0;
 		for (FeedBackBean fb : model) {
@@ -192,12 +206,13 @@ public class AdminSummaryQuestionList {
 		
 		String[] columnNames = { "Id", "order", "type", "question", "answers" };
 
-		JTable jt = new JTable(data, columnNames);
+		jt = new JTable(data, columnNames);
 		jt.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		jt.setSelectionBackground(Color.ORANGE);
 		jt.setRowHeight(22);
 		jt.setBackground(Color.white);
 		jt.setFont(new Font("Calibri", Font.PLAIN, 18));
+		
 
 		JTableHeader header = jt.getTableHeader();
 		header.setBackground(Color.BLACK);
@@ -224,8 +239,8 @@ public class AdminSummaryQuestionList {
 		radioChartPie.setOpaque(false);
 		radioChartPie.setFocusable(false);
 		radioChartPie.setBackground(new Color(0,0,0,0));
-		radioChartPie.setFont(new Font("Calibri", Font.PLAIN, 14));
-		radioChartPie.setForeground(Color.WHITE);
+		radioChartPie.setFont(new Font("Calibri", Font.BOLD, 18));
+		radioChartPie.setForeground(Color.ORANGE);
 		radioChartPie.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		radioChartPie.setBounds(58, 98, 109, 23);
 		radioChartPie.setSelected(true);
@@ -235,8 +250,8 @@ public class AdminSummaryQuestionList {
 		radioChartBar.setOpaque(false);
 		radioChartBar.setFocusable(false);
 		radioChartBar.setBackground(new Color(0,0,0,0));
-		radioChartBar.setFont(new Font("Calibri", Font.PLAIN, 14));
-		radioChartBar.setForeground(Color.WHITE);
+		radioChartBar.setFont(new Font("Calibri", Font.BOLD, 18));
+		radioChartBar.setForeground(Color.ORANGE);
 		radioChartBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		radioChartBar.setBounds(182, 98, 109, 23);
 		panel_1.add(radioChartBar);
@@ -280,7 +295,7 @@ public class AdminSummaryQuestionList {
 //					chartImgPieChart() ;
 					
 					if (radioChartPie.isSelected()) {
-						displayChartConfiger(selectedData, "pie",selectedQuestion);						
+						displayChartConfiger(selectedData, "pie",selectedQuestion);		
 					}else {
 						displayChartConfiger(selectedData, "bar",selectedQuestion);
 					}
@@ -289,6 +304,7 @@ public class AdminSummaryQuestionList {
 					jt.setEnabled(true);
 				}
 			}
+			
 		});
 	}
 
@@ -300,12 +316,17 @@ public class AdminSummaryQuestionList {
 			String response = feed.getclientFeedbackSummaryByQid(qid);
 
 //			System.out.println(response);
-			
-			if (type.equalsIgnoreCase("pie")) {
-				chartImgPieChart(response,selectedQuestion);				
-			}else {
-				chartImgBarChart(response,selectedQuestion);
+			if (response != null && !response.trim().isEmpty()) {
+				if (type.equalsIgnoreCase("pie")) {
+					chartImgPieChart(response,selectedQuestion);				
+				}else {
+					chartImgBarChart(response,selectedQuestion);
+				}
+			} else {
+				frame.setCursor(defaultCursor);
 			}
+			
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -413,19 +434,6 @@ public class AdminSummaryQuestionList {
 			System.out.println(strAnswersCount);
 
 			totalCount = (int) map.get("questionsCount");
-//			String title = "GG";
-			
-			
-//			JSONObject subObj = new JSONObject();
-//			subObj.put("formatter", "function(){if(this.y!=0){return this.y;}}");
-			
-//			JSONObject paramObj  = new JSONObject();
-//			paramObj.put("dataLabels", subObj);
-//			
-//			System.out.println(paramObj);
-			
-//			String chl = "Hello|World";
-//			System.out.println(URLEncoder.encode(chl, "UTF-8"));
 			
 			String path = "https://image-charts.com/chart?" 
 					+ "chco=FFFF10%2CFF2027"
@@ -439,21 +447,6 @@ public class AdminSummaryQuestionList {
 //					+ "&chtt=" + title;
 //					+ "&dataLabels="+(URLEncoder.encode(subObj.toString(), "UTF-8"));
 			
-//			String path = "https://image-charts.com/chart?" 
-//					+ "chco=FFFF10%2CFF2027"
-//					+ "&chd=t"+strAngles
-//					+ "&chdl="+strAnswersTitle+"&chdlp=b"
-////					+ "&chf=b0%2Clg%2C90%2C68cefd%2C0%2C96a6ff%2C1"
-//					+ "&chl=" + strAnswersCount
-//					+ "&chli=" + totalCount
-//					+ "&chma=0%2C0%2C20%2C20&chs=700x600&cht=pd&chtt=" + title;
-
-//			String path = "https://image-charts.com/chart?" + "chd=t%3A" + angle1 + "%2C" + angle2 + "%2C" + angle3
-//					+ "%2C" + angle4 + "&chdl=" + type1 + "%7C" + type2 + "%7C" + type3 + "%7C" + type4 + "&chdlp=b"
-//					+ "&chf=b0%2Clg%2C90%2C68cefd%2C0%2C96a6ff%2C1" + "&chl=" + typeCount1 + "%7C" + typeCount2 + "%7C"
-//					+ typeCount3 + "%7C" + typeCount4 + "&chli=" + totalCount
-//					+ "%E2%82%AC&chma=0%2C0%2C20%2C20&chs=700x600&cht=pd&chtt=" + title;
-
 			JFrame f = new JFrame();
 			
 			JLabel lblQuestion = new JLabel(selectedQuestion);
@@ -557,7 +550,7 @@ public class AdminSummaryQuestionList {
 			lblQuestion.setBorder(new CompoundBorder(border, margin));
 			f.getContentPane().add(lblQuestion);
 			
-			System.out.println("Get Image from " + bar);
+//			System.out.println("Get Image from " + bar);
 			URL url = new URL(bar);
 			BufferedImage image = ImageIO.read(url);
 			System.out.println("Load image into frame...");
@@ -568,6 +561,14 @@ public class AdminSummaryQuestionList {
 			f.pack();
 			f.setLocation(550, 250);
 			f.setVisible(true);
+			
+			
+			f.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosed(WindowEvent e) {
+					System.out.println("close");
+				}
+			});
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}

@@ -61,6 +61,9 @@ public class AdminQuestionsList2 {
 	private JPanel mainPanel, panel, panel_1;
 	private JTextField txtAddQuestions;
 	private JTable table;
+	
+	public final static Cursor busyCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+	public final static Cursor defaultCursor = Cursor.getDefaultCursor();
 
 	public AdminQuestionsList2(JFrame frame) {
 		this.frame = frame;
@@ -71,6 +74,8 @@ public class AdminQuestionsList2 {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		frame.setCursor(defaultCursor);
+		
 		mainPanel = new JPanel();
 		mainPanel.setBounds(0, 0, 1200, 820);
 		mainPanel.setBackground(new Color(0, 0, 0, 0));

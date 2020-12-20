@@ -34,6 +34,7 @@ public class MainGUI {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	// main method in client
 	private void initialize() {
 		frame = new JFrame();
 		frame.setVisible(true);
@@ -45,14 +46,6 @@ public class MainGUI {
 		frame.setBounds(300, 100, 1200, 850);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-//		frame.setVisible(false);
-//		new AdminQuestions(frame,0);
-//		new Admin(frame,null);
-//		new AdminUsers(frame);
 		new login_pg(frame);
-//		new Customer_account_pg(frame);
-//		new AdminSummaryQuestionList(frame);
-//		new AdminQuestionsList2(frame);
-//		new C_Dashboard(frame, null);
 	}
 }

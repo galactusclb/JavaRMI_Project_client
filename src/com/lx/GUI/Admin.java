@@ -27,6 +27,8 @@ public class Admin {
 	private UserBean currentUser;
 	private JPanel mainPanel,panel,panel_1;
 	
+	public final static Cursor busyCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+	public final static Cursor defaultCursor = Cursor.getDefaultCursor();
 	
 	public Admin(JFrame frame,UserBean currentUser) {
 		this.frame=frame;
@@ -38,6 +40,8 @@ public class Admin {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		frame.setCursor(defaultCursor);
+		
 		mainPanel = new JPanel();
 		mainPanel.setBounds(0, 0, 1200, 820);
 		mainPanel.setBackground(new Color(0, 0, 0, 0));

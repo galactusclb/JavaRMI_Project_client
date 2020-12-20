@@ -62,6 +62,7 @@ public class login_pg {
 
 		System.out.println(pref.get("uname", user));
 
+		//get logged details  
 		if (pref.get("uname", user) != null && pref.get("password", pass) != null && pref.get("role", role) != null) {
 			txtuname.setText(pref.get("uname", user));
 			txtpass.setText(pref.get("password", pass));
@@ -116,18 +117,6 @@ public class login_pg {
 
 		mapper = new ObjectMapper();
 
-//		try {
-//			user = mapper.readValue(new File("users.json"), UserBean[].class);
-//		} catch (JsonParseException e) {
-//			e.printStackTrace();
-//		} catch (JsonMappingException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-
-//		setCockies("", "", "");
-
 		btnLogin.addActionListener(new ActionListener() {
 
 			@Override
@@ -143,19 +132,9 @@ public class login_pg {
 				String resulte = null;
 
 				try {
+					
+					//connect server
 					UsersEvents_Interface user = (UsersEvents_Interface) Naming.lookup("rmi://localhost/UserEvents");
-
-//					String jString = user.getUsers();
-//					
-//					JSONArray jArray = (JSONArray) new JSONTokener(jString.toString()).nextValue();
-//					
-//					for (int i = 1; i < jArray.length(); i++) {
-//						JSONObject jObject = jArray.getJSONObject(i);
-//						System.out.println(jObject.getString("userID") + " " + jObject.getString("uName") + " "
-//								+ jObject.getString("role"));
-//					}
-
-//					role = user.Login(username, password);
 
 					resulte = user.LoginUsersApi(username, password);
 
@@ -170,7 +149,6 @@ public class login_pg {
 					if (resulte != null) {
 						jObject = new JSONObject(resulte);
 
-//						if (role != null && !role.trim().isEmpty()) {
 						if (jObject.has("role")) {
 							JOptionPane.showMessageDialog(frame, "Succesfully Logged");
 
@@ -201,6 +179,8 @@ public class login_pg {
 		});
 	}
 
+	
+	//create cookies for logged user
 	public void setCockies(String uname, String password, String role) {
 
 		pref.put("uname", uname);

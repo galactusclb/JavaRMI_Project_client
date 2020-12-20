@@ -54,6 +54,9 @@ public class AdminUsers {
 	}
 
 	private void initialize() {
+		
+		frame.setCursor(defaultCursor);
+		
 		mainPanel = new JPanel();
 		mainPanel.setBounds(0, 0, 1200, 820);
 		mainPanel.setBackground(new Color(0, 0, 0, 0));
@@ -391,11 +394,11 @@ public class AdminUsers {
 					for (FeedBackBean feedBackBean : model) {
 //						System.out.println(feedBackBean.getQuestion() + " : " + feedBackBean.getSelectedAnswer());
 
-						for (int j = 0; j < 5; j++) {
+//						for (int j = 0; j < 5; j++) {
 							ptable.addCell(Integer.toString(feedBackBean.get_id()));
 							ptable.addCell(feedBackBean.getQuestion());
 							ptable.addCell(feedBackBean.getSelectedAnswer());
-						}
+//						}
 					}
 					
 					

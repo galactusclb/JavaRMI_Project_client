@@ -56,6 +56,7 @@ public class Customer_feedback_pg {
 
 	
 	public Customer_feedback_pg(JFrame frame,UserBean currentUser) {
+		
 		pref = Preferences.userRoot().node("cockies");
 		this.frame=frame;
 		initialize();
@@ -65,13 +66,6 @@ public class Customer_feedback_pg {
 			user = pref.get("uname", user);
 			System.out.println();
 		}
-//		for (int i = 0; i < arrStr.length; i++) {
-//			for (int j = 0; j < arrStr[i].length; j++) {
-//				arrStr[i][j] = "Str" + j;
-//				System.out.print(arrStr[i][j] + " ");
-//			}
-//			System.out.println("");
-//		}
 	}
 
 	/**
@@ -103,10 +97,6 @@ public class Customer_feedback_pg {
 		panel_1.setBounds(0, 99, 1194, 716);
 		mainPanel.add(panel_1);
 		panel_1.setLayout(null);
-
-//		Elments 
-
-		
 		
 		JButton btnLogout = new JButton("");
 		btnLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

@@ -52,6 +52,9 @@ public class AdminQuestions {
 	private JTextField txtOrder;
 	private int editQuestionId;
 	private JLabel lblAvailable;
+	
+	public final static Cursor busyCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+	public final static Cursor defaultCursor = Cursor.getDefaultCursor();
 
 	public AdminQuestions(JFrame frame, int qId) {
 		this.frame = frame;
@@ -104,6 +107,8 @@ public class AdminQuestions {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		frame.setCursor(defaultCursor);
+		
 		JPanel mainPanel = new JPanel();
 		mainPanel.setBounds(0, 0, 1200, 820);
 		mainPanel.setBackground(new Color(0, 0, 0, 0));
