@@ -11,11 +11,7 @@ User login details : <br>
 &nbsp;&nbsp;&nbsp; password : Chanaka123@ <br>
 &nbsp;&nbsp;&nbsp; role: admin <br>
 
-<br>
-
 <img src="https://crown-education.org/crown/wp-content/uploads/2018/04/Bedfordshire-campus.png" width="200" height="200" />
-
-<br>
 
 # Technologies
 
